@@ -21,5 +21,19 @@ export const InventoryService = {
   createTransaction: async (transaction: Omit<InventoryTransaction, 'id'>) => {
     const response = await api.post<InventoryTransaction>('/inventory/transactions', transaction);
     return response.data;
+  },
+
+  getSummary: async () => {
+    const items = await InventoryService.getItems();
+    const total_items = items.length;
+    const total_stock_value = items.reduce((acc, item) => acc + (item.current_stock * item.unit_cost), 0);
+    const low_stock_items = items.filter(item => item.current_stock < 10).length;
+
+    return {
+      total_items,
+      total_stock_value,
+      low_stock_items
+    };
   }
 };
+
