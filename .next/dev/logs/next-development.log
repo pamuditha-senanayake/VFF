@@ -1,0 +1,28 @@
+{"timestamp":"00:08:47.312","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:47.314","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection:\" Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:47.315","source":"Server","level":"ERROR","message":"⨯ \"unhandledRejection: \" Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:47.395","source":"Server","level":"ERROR","message":"⨯ PageNotFoundError: Cannot find module for page: route not found /_not-found/page"}
+{"timestamp":"00:08:48.010","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, open '/Users/pamudithasenanayake/Downloads/Projects/Project_3/.next/dev/static/development/_buildManifest.js.tmp.kblg0h2i0cc'"}
+{"timestamp":"00:08:48.011","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.029","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.030","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.036","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.039","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.042","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.043","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.045","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.046","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.048","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.049","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.058","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.059","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.061","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.061","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.098","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.099","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.102","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.102","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.103","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.104","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.179","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
+{"timestamp":"00:08:48.183","source":"Server","level":"ERROR","message":"Error: ENOENT: no such file or directory, scandir '/Users/pamudithasenanayake/Downloads/Projects/Project_3/src/app'"}
