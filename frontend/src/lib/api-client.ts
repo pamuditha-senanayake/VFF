@@ -9,8 +9,17 @@ const api = axios.create({
 
 // Mocking behavior for demo
 api.interceptors.request.use((config) => {
-  // Add token here if needed
+  if (typeof window !== 'undefined') {
+    const storage = localStorage.getItem('vff-auth-storage');
+    if (storage) {
+      const { state } = JSON.parse(storage);
+      if (state.token) {
+        config.headers.Authorization = `Bearer ${state.token}`;
+      }
+    }
+  }
   return config;
 });
+
 
 export default api;
