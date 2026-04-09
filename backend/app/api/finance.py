@@ -7,7 +7,7 @@ from datetime import date
 from supabase import Client
 from app.core.security import check_user_role
 
-router = APIRouter(dependencies=[Depends(check_user_role(["Admin", "Director"]))])
+router = APIRouter()
 
 
 @router.get("/transactions", response_model=List[FinancialTransaction])

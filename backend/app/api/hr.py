@@ -6,7 +6,7 @@ from datetime import date
 from supabase import Client
 from app.core.security import check_user_role, get_current_user
 
-router = APIRouter(dependencies=[Depends(check_user_role(["Admin"]))])
+router = APIRouter()
 
 
 @router.get("/employees", response_model=List[EmployeeProfile])
