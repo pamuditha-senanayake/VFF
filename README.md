@@ -8,11 +8,11 @@ VFF IMS is a production-ready management platform built with modern technologies
 
 ## ✨ Key Features
 
-- **Real-time Financial Visibility**: Track cash vs receivables with intuitive visualizations.
-- **Automated HR & Payroll**: Attendance logs with finalizing/locking mechanics for automated payroll preparation.
-- **Program Cost Analysis**: In-depth analysis of costs per program (e.g., cost per animal treated).
+- **Real-time Financial Visibility**: Track cash vs receivables with dynamic LKR-aligned visualizations.
+*   **Role-Based Access Control**: Secure login and module-level permissions (Admin/Director/Staff).
+- **Automated HR & Payroll**: Attendance logs with finalizing mechanisms.
+- **Program Impact Tracking**: Manage environment initiatives (e.g., sterilization, vaccination) with live metrics.
 - **Inventory Tracking**: Manage stock levels and transactions linked directly to operational programs.
-- **Strict RBAC & Audit Logs**: Role-based access control (Director/Admin) with full activity auditing.
 
 ## 🛠 Tech Stack
 
@@ -23,51 +23,61 @@ VFF IMS is a production-ready management platform built with modern technologies
 - **Styling**: Tailwind CSS & ShadCN UI
 - **Visuals**: Recharts for high-fidelity data visualization
 
-### Backend (Proposed)
-- **Framework**: FastAPI (Python)
-- **Database**: PostgreSQL
-- **Security**: JWT & OAuth2
+### Backend
+- **Framework**: FastAPI (Python 3.12)
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: JWT via Supabase GoTrue
 
 ## 📦 Getting Started
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
+### 1. Clone & Core Setup
+```bash
+git clone https://github.com/shamilaw-sci/CSC3213_20_Group_C
+cd CSC3213_20_Group_C
+```
 
-### Installation
+### 2. Backend Setup
+Navigate to the backend directory and set up your environment:
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+**Environment Variables**: Create a `.env` file in the `backend/` folder:
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_service_role_key
+SUPABASE_ANON_KEY=your_anon_key
+PORT=8000
+```
+**Run Backend**:
+```bash
+export PYTHONPATH=$PYTHONPATH:.
+python3 app/main.py
+```
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/shamilaw-sci/CSC3213_20_Group_C
-   cd CSC3213_20_Group_C
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**:
-   Create a `.env.local` file and add:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:8000/api
-   ```
-
-### Running the Project
-
-#### Frontend
-Run the development server:
+### 3. Frontend Setup
+Navigate to the frontend directory:
+```bash
+cd ../frontend
+npm install
+```
+**Environment Variables**: Create a `.env.local` file in the `frontend/` folder:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+```
+**Run Frontend**:
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-#### Backend
-For backend setup instructions, please refer to the [BACKEND_SETUP.md](BACKEND_SETUP.md) file in the root directory.
-
-## 👥 Role Access
-- **Admin**: Full access to all modules, including Audit Logs and User Management.
-- **Director**: Access to Operational and Financial dashboards (HR, Finance, Programs, Inventory).
+## 👥 Role Access Reference
+- **Admin**: Full access across all modules.
+- **Director**: Access to Operational/Financial dashboards (Finance, Programs, Inventory).
+- **Staff**: Limited access (Self-service HR, specialized inventory tasks).
 
 ## 📄 License
-This project is proprietary and confidential. Internal use only by VFF.
+Internal use only by VFF. Proprietary and Confidential.

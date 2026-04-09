@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.core.supabase import get_supabase
-from app.schemas.finance import FinancialTransaction, FinancialTransactionCreate, Program
+from app.schemas.finance import FinancialTransaction, FinancialTransactionCreate, Program, ProgramCreate
+
 from typing import List, Optional
 from datetime import date
 from supabase import Client
@@ -36,9 +37,10 @@ async def get_programs(supabase: Client = Depends(get_supabase)):
     return response.data
 
 @router.post("/programs", response_model=Program)
-async def create_program(program: Program, supabase: Client = Depends(get_supabase)):
+async def create_program(program: ProgramCreate, supabase: Client = Depends(get_supabase)):
     # program is base model here, but we can use it to create
-    response = supabase.table("programs").insert(program.model_dump(exclude={"id"})).execute()
+    response = supabase.table("programs").insert(program.model_dump()).execute()
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create program")
     return response.data[0]
+

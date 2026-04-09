@@ -7,6 +7,10 @@ class ProgramBase(BaseModel):
     total_animals_treated: int = 0
     status: str = "Active"
 
+class ProgramCreate(ProgramBase):
+    pass
+
+
 class Program(ProgramBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
