@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useEmployees, useAttendance, useLockAttendance } from '@/hooks/useHR';
 import { 
   Table, 
@@ -15,17 +15,40 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Lock, Unlock, UserPlus, Filter, Download } from 'lucide-react';
+import { Lock, Unlock, UserPlus, Filter, Download, UserCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import ProtectedRoute from '@/components/layout/protected-route';
+import { AuthService } from '@/services/auth.service';
+import { toast } from 'sonner';
 
 export default function HRPage() {
   const [activeTab, setActiveTab] = useState('employees');
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   
   const { data: employees, isLoading: loadingEmployees } = useEmployees();
   const { data: attendance, isLoading: loadingAttendance } = useAttendance(selectedDate);
   const lockAttendance = useLockAttendance();
+
+  const fetchUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const data = await AuthService.getUsers();
+      setUsers(data);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load system users');
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'system_roles') {
+      fetchUsers();
+    }
+  }, [activeTab]);
 
   return (
     <ProtectedRoute allowedRoles={['Admin']}>
@@ -51,6 +74,7 @@ export default function HRPage() {
           <TabsTrigger value="employees" className="data-[state=active]:bg-slate-800">Employee List</TabsTrigger>
           <TabsTrigger value="attendance" className="data-[state=active]:bg-slate-800">Daily Attendance</TabsTrigger>
           <TabsTrigger value="payroll" className="data-[state=active]:bg-slate-800">Payroll Prep</TabsTrigger>
+          <TabsTrigger value="system_roles" className="data-[state=active]:bg-slate-800">System Roles</TabsTrigger>
         </TabsList>
 
         <TabsContent value="employees" className="mt-6">
@@ -188,9 +212,73 @@ export default function HRPage() {
              </div>
           </div>
         </TabsContent>
+
+        <TabsContent value="system_roles" className="mt-6">
+          <Card className="bg-slate-900 border-slate-800">
+            <CardHeader>
+              <CardTitle className="text-white">System Accounts</CardTitle>
+              <CardDescription>Assign and edit system permissions and roles.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loadingUsers ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-10 w-full bg-slate-800" />
+                  <Skeleton className="h-10 w-full bg-slate-800" />
+                </div>
+              ) : (
+                <div className="rounded-md border border-slate-800 overflow-hidden">
+                  <Table>
+                    <TableHeader className="bg-slate-950">
+                      <TableRow className="hover:bg-transparent border-slate-800">
+                        <TableHead className="text-slate-300">Email</TableHead>
+                        <TableHead className="text-slate-300">Current Role</TableHead>
+                        <TableHead className="text-slate-300 text-right">Assign Role</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.map((user) => (
+                        <TableRow key={user.id} className="border-slate-800 hover:bg-slate-800/40">
+                          <TableCell className="font-medium">{user.email}</TableCell>
+                          <TableCell>
+                            <Badge className="bg-[#6366f1]/10 text-[#6366f1] border-[#6366f1]/20">
+                              {user.roles?.role_name || 'No Role'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <select
+                              value={user.role_id}
+                              onChange={async (e) => {
+                                const newRoleId = parseInt(e.target.value);
+                                try {
+                                  await AuthService.updateUserRole(user.id, newRoleId);
+                                  toast.success('Role updated successfully!');
+                                  fetchUsers();
+                                } catch (err) {
+                                  toast.error('Failed to update role');
+                                }
+                              }}
+                              className="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-sm text-slate-300 focus:outline-none focus:border-[#6366f1]"
+                            >
+                              <option value={1}>Admin</option>
+                              <option value={2}>Director</option>
+                              <option value={3}>Finance Officer</option>
+                              <option value={4}>HR Officer</option>
+                              <option value={5}>Operations Lead</option>
+                              <option value={6}>General Staff</option>
+                              <option value={7}>System Administrator</option>
+                            </select>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
     </ProtectedRoute>
   );
 }
-
