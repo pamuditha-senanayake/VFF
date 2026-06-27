@@ -5,3 +5,8 @@ node_modules/
 .env*
 frontend/node_modules/
 frontend/.next/
+backend/venv/
+
+gemini.md
+claude.md
+design.md
