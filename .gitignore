@@ -7,6 +7,14 @@ frontend/node_modules/
 frontend/.next/
 backend/venv/
 
+# Local rules and design documents
+gemini.md
+GEMINI.md
+claude.md
+CLAUDE.md
+design.md
+DESIGN.md
+
 gemini.md
 claude.md
 design.md
