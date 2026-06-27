@@ -18,5 +18,15 @@ export const AuthService = {
   logout: () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_role');
+  },
+
+  getUsers: async () => {
+    const response = await api.get('/auth/users');
+    return response.data;
+  },
+  
+  updateUserRole: async (userId: string, roleId: number) => {
+    const response = await api.put(`/auth/users/${userId}/role`, { role_id: roleId });
+    return response.data;
   }
 };
