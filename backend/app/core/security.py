@@ -28,8 +28,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
 
 def check_user_role(allowed_roles: list[str]):
     async def role_checker(current_user: dict = Depends(get_current_user)):
-        role_name = current_user.get("roles", {}).get("role_name")
-        if role_name not in allowed_roles:
+        role_name = (current_user.get("roles", {}).get("role_name") or "").lower()
+        if role_name not in [r.lower() for r in allowed_roles]:
             raise HTTPException(status_code=403, detail="Insufficient permissions")
         return current_user
     return role_checker
