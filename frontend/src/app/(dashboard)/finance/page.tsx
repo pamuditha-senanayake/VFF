@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FinanceService } from '@/services/finance.service';
 import { 
@@ -18,13 +19,15 @@ import {
   TrendingDown, 
   TrendingUp, 
   Filter, 
-  CreditCard,
   PieChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { NewTransactionModal } from '@/components/finance/NewTransactionModal';
 
 export default function FinancePage() {
+  const [showModal, setShowModal] = useState(false);
+
   const { data: transactions, isLoading } = useQuery({
     queryKey: ['transactions'],
     queryFn: () => FinanceService.getTransactions()
@@ -42,7 +45,7 @@ export default function FinancePage() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">Financial Management</h1>
           <p className="text-slate-400">Track income, expenses, and manage receivables across all programs.</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700">
           <PlusCircle className="mr-2 h-4 w-4" /> New Transaction
         </Button>
       </div>
@@ -153,25 +156,27 @@ export default function FinancePage() {
       </Card>
       
       <div className="grid md:grid-cols-2 gap-6">
-         <Card className="bg-slate-900 border-slate-800">
-           <CardHeader>
-             <CardTitle className="text-white">Receivable Aging</CardTitle>
-             <CardDescription>Breakdown of pending income by duration.</CardDescription>
-           </CardHeader>
-           <CardContent className="h-48 flex items-center justify-center text-slate-600 italic">
-              Chart placeholder: Aging breakdown
-           </CardContent>
-         </Card>
-         <Card className="bg-slate-900 border-slate-800">
-           <CardHeader>
-             <CardTitle className="text-white">Program Allocations</CardTitle>
-             <CardDescription>Distribution of expenses across active programs.</CardDescription>
-           </CardHeader>
-           <CardContent className="h-48 flex items-center justify-center text-slate-600 italic">
-              Chart placeholder: Allocation distribution
-           </CardContent>
-         </Card>
+        <Card className="bg-slate-900 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white">Receivable Aging</CardTitle>
+            <CardDescription>Breakdown of pending income by duration.</CardDescription>
+          </CardHeader>
+          <CardContent className="h-48 flex items-center justify-center text-slate-600 italic">
+            Chart placeholder: Aging breakdown
+          </CardContent>
+        </Card>
+        <Card className="bg-slate-900 border-slate-800">
+          <CardHeader>
+            <CardTitle className="text-white">Program Allocations</CardTitle>
+            <CardDescription>Distribution of expenses across active programs.</CardDescription>
+          </CardHeader>
+          <CardContent className="h-48 flex items-center justify-center text-slate-600 italic">
+            Chart placeholder: Allocation distribution
+          </CardContent>
+        </Card>
       </div>
+
+      <NewTransactionModal open={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }

@@ -41,19 +41,15 @@ async def get_transactions(
 @router.post("/transactions", response_model=FinancialTransaction)
 async def create_transaction(
     transaction: FinancialTransactionCreate,
-    user = Depends(check_user_role(["admin", "finance"])), # SECURED
+    user = Depends(check_user_role(["admin", "finance"])),
     supabase: Client = Depends(get_supabase)
 ):
-    # Data Integrity Check
     if transaction.amount <= 0:
         raise HTTPException(status_code=400, detail="Transaction amount must be strictly positive.")
 
     data = transaction.model_dump()
-
-    # Format to match DB Constraints
-    data["transaction_type"] = data["transaction_type"].capitalize()
-    if "status" in data and data["status"]:
-        data["status"] = data["status"].capitalize()
+    data["transaction_date"] = str(data["transaction_date"])  # 👈 ADD THIS
+    data["amount"] = float(data["amount"])                    # 👈 AND THIS (for Decimal)
 
     response = supabase.table("financial_transactions").insert(data).execute()
 
