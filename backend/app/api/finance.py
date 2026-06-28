@@ -108,21 +108,15 @@ async def create_program(
 
 @router.get("/summary")
 async def get_financial_summary(
-    user = Depends(check_user_role(["admin", "director", "finance"])), # SECURED
+    user = Depends(check_user_role(["admin", "director", "finance"])),
     supabase: Client = Depends(get_supabase)
 ):
-    # Only select what is needed for math
-    response = supabase.table("financial_transactions").select("amount, transaction_type").execute()
-    transactions = response.data or []
-
-    total_income = sum(t["amount"] for t in transactions if t["transaction_type"].lower() == "income")
-    total_expense = sum(t["amount"] for t in transactions if t["transaction_type"].lower() == "expense")
-
-    return {
-        "total_income": total_income,
-        "total_expense": total_expense,
-        "balance": total_income - total_expense
-    }
+    response = supabase.rpc("get_finance_summary").execute()
+    
+    if not response.data:
+        raise HTTPException(status_code=500, detail="Failed to fetch financial summary")
+    
+    return response.data
 
 
 @router.get("/summary/monthly")
