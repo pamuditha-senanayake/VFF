@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FinanceService } from '@/services/finance.service';
+import { Transaction } from '@/types';
 import { 
   Table, 
   TableBody, 
@@ -19,14 +20,29 @@ import {
   TrendingDown, 
   TrendingUp, 
   Filter, 
-  PieChart
+  PieChart,
+  Pencil,
+  Ban
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { NewTransactionModal } from '@/components/finance/NewTransactionModal';
+import { EditTransactionModal } from '@/components/finance/EditTransactionModal';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 export default function FinancePage() {
-  const [showModal, setShowModal] = useState(false);
+  const queryClient = useQueryClient();
+  const [showNewModal, setShowNewModal] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [voidingTransaction, setVoidingTransaction] = useState<Transaction | null>(null);
 
   const { data: transactions, isLoading } = useQuery({
     queryKey: ['transactions'],
@@ -38,6 +54,16 @@ export default function FinancePage() {
     queryFn: FinanceService.getSummary
   });
 
+
+  const { mutate: voidTransaction, isPending: isVoiding } = useMutation({
+    mutationFn: (id: number) => FinanceService.voidTransaction(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['financeSummary'] });
+      setVoidingTransaction(null);
+    },
+  });
+
   return (
     <div className="space-y-8 pb-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -45,7 +71,7 @@ export default function FinancePage() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">Financial Management</h1>
           <p className="text-slate-400">Track income, expenses, and manage receivables across all programs.</p>
         </div>
-        <Button onClick={() => setShowModal(true)} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => setShowNewModal(true)} className="bg-blue-600 hover:bg-blue-700">
           <PlusCircle className="mr-2 h-4 w-4" /> New Transaction
         </Button>
       </div>
@@ -112,16 +138,20 @@ export default function FinancePage() {
                     <TableHead className="text-slate-300">Type</TableHead>
                     <TableHead className="text-slate-300 text-right">Amount</TableHead>
                     <TableHead className="text-slate-300">Status</TableHead>
+                    <TableHead className="text-slate-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {transactions?.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-slate-500">No transactions recorded</TableCell>
+                      <TableCell colSpan={6} className="text-center py-8 text-slate-500">No transactions recorded</TableCell>
                     </TableRow>
                   ) : (
                     transactions?.map((tx) => (
-                      <TableRow key={tx.id} className="border-slate-800 hover:bg-slate-800/40">
+                      <TableRow 
+                        key={tx.id} 
+                        className={`border-slate-800 hover:bg-slate-800/40 ${tx.status === 'Voided' ? 'opacity-50' : ''}`}
+                      >
                         <TableCell className="font-medium">
                           <span className="text-slate-200">{format(new Date(tx.transaction_date), 'MMM dd, yyyy')}</span>
                         </TableCell>
@@ -139,10 +169,34 @@ export default function FinancePage() {
                           {tx.transaction_type === 'Income' ? '+' : '-'}${tx.amount.toLocaleString()}
                         </TableCell>
                         <TableCell>
-                          {tx.status === 'Receivable' ? (
+                          {tx.status === 'Voided' ? (
+                            <Badge variant="outline" className="text-slate-500 border-slate-500/30 bg-slate-500/10">Voided</Badge>
+                          ) : tx.status === 'Receivable' ? (
                             <Badge variant="outline" className="text-amber-400 border-amber-400/30 bg-amber-400/10">Receivable</Badge>
                           ) : (
                             <Badge variant="outline" className="text-emerald-400 border-emerald-400/30 bg-emerald-400/10">Settled</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {tx.status !== 'Voided' && (
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setEditingTransaction(tx)}
+                                className="h-7 w-7 p-0 text-slate-400 hover:text-white hover:bg-slate-700"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setVoidingTransaction(tx)}
+                                className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 hover:bg-rose-400/10"
+                              >
+                                <Ban className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
                           )}
                         </TableCell>
                       </TableRow>
@@ -176,7 +230,37 @@ export default function FinancePage() {
         </Card>
       </div>
 
-      <NewTransactionModal open={showModal} onClose={() => setShowModal(false)} />
+      <NewTransactionModal open={showNewModal} onClose={() => setShowNewModal(false)} />
+      
+      <EditTransactionModal
+        transaction={editingTransaction}
+        onClose={() => setEditingTransaction(null)}
+      />
+
+      <Dialog open={!!voidingTransaction} onOpenChange={(o) => !o && setVoidingTransaction(null)}>
+        <DialogContent className="bg-slate-900 border-slate-800 text-white">
+          <DialogHeader>
+            <DialogTitle>Void this transaction?</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              This will mark the transaction as voided. It will remain visible in the ledger for audit purposes but will no longer affect your financial totals.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose>
+              <Button className="border-slate-700 text-slate-300 hover:bg-slate-800">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              onClick={() => voidingTransaction && voidTransaction(voidingTransaction.id)}
+              disabled={isVoiding}
+              className="bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              {isVoiding ? 'Voiding...' : 'Void transaction'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

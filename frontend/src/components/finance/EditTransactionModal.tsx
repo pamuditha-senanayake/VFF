@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FinanceService } from '@/services/finance.service';
+import { Transaction } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -22,22 +23,20 @@ import {
 } from '@/components/ui/select';
 import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 
-interface NewTransactionModalProps {
-  open: boolean;
+interface EditTransactionModalProps {
+  transaction: Transaction | null;
   onClose: () => void;
 }
 
-const EMPTY_FORM = {
-  transaction_date: new Date().toISOString().split('T')[0],
-  amount: '',
-  transaction_type: '' as 'Income' | 'Expense' | '',
-  status: '' as 'Cash' | 'Receivable' | '',
-  program_id: null as number | null,
-};
-
-export function NewTransactionModal({ open, onClose }: NewTransactionModalProps) {
+export function EditTransactionModal({ transaction, onClose }: EditTransactionModalProps) {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [form, setForm] = useState({
+    transaction_date: '',
+    amount: '',
+    transaction_type: '' as 'Income' | 'Expense' | '',
+    status: '' as 'Cash' | 'Receivable' | '',
+    program_id: null as number | null,
+  });
   const [error, setError] = useState<string | null>(null);
 
   const { data: programs } = useQuery({
@@ -45,23 +44,31 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
     queryFn: FinanceService.getPrograms,
   });
 
-  const { mutate: createTransaction, isPending } = useMutation({
-    mutationFn: FinanceService.createTransaction,
+  // Pre-fill form when transaction changes
+  useEffect(() => {
+    if (transaction) {
+      setForm({
+        transaction_date: transaction.transaction_date,
+        amount: transaction.amount.toString(),
+        transaction_type: transaction.transaction_type,
+        status: transaction.status === 'Void' ? 'Cash' : transaction.status as 'Cash' | 'Receivable',
+        program_id: transaction.program_id,
+      });
+      setError(null);
+    }
+  }, [transaction]);
+
+  const { mutate: updateTransaction, isPending } = useMutation({
+    mutationFn: (data: any) => FinanceService.updateTransaction(transaction!.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['financeSummary'] });
-      handleClose();
+      onClose();
     },
     onError: (err: any) => {
-      setError(err?.response?.data?.detail || 'Failed to record transaction. Please try again.');
+      setError(err?.response?.data?.detail || 'Failed to update transaction. Please try again.');
     },
   });
-
-  const handleClose = () => {
-    setForm(EMPTY_FORM);
-    setError(null);
-    onClose();
-  };
 
   const handleSubmit = () => {
     setError(null);
@@ -77,20 +84,20 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
       return;
     }
 
-    createTransaction({
+    updateTransaction({
       transaction_date: form.transaction_date,
       amount,
-      transaction_type: form.transaction_type as 'Income' | 'Expense',
-      status: form.status as 'Cash' | 'Receivable',
+      transaction_type: form.transaction_type,
+      status: form.status,
       program_id: form.program_id,
-    } as any);
+    });
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
+    <Dialog open={!!transaction} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-slate-900 border-slate-800 text-white sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Record Transaction</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Edit Transaction</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
@@ -130,10 +137,9 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
                 type="number"
                 min="0"
                 step="0.01"
-                placeholder="0.00"
                 value={form.amount}
                 onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                className="pl-7 bg-slate-800 border-slate-700 text-white placeholder:text-slate-600 focus:border-blue-500"
+                className="pl-7 bg-slate-800 border-slate-700 text-white focus:border-blue-500"
               />
             </div>
           </div>
@@ -166,7 +172,7 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
             </Select>
           </div>
 
-          {/* Program (optional) */}
+          {/* Program */}
           <div className="space-y-1.5">
             <Label className="text-slate-400 text-xs uppercase tracking-wider">
               Program <span className="text-slate-600 normal-case">(optional)</span>
@@ -174,10 +180,8 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
             <Select
               value={form.program_id?.toString() ?? 'none'}
               onValueChange={(v) =>
-                setForm((f) => ({
-                  ...f,
-                  program_id: v === null || v === 'none' ? null : parseInt(v),
-                }))
+                // v can be string | null from the Select; ensure string before parseInt
+                setForm((f) => ({ ...f, program_id: v === 'none' || v == null ? null : parseInt(v as string) }))
               }
             >
               <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:border-blue-500">
@@ -194,7 +198,6 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
             </Select>
           </div>
 
-          {/* Error */}
           {error && (
             <p className="text-rose-400 text-sm bg-rose-400/10 border border-rose-400/20 rounded-md px-3 py-2">
               {error}
@@ -205,7 +208,7 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
         <DialogFooter className="gap-2">
           <Button
             variant="outline"
-            onClick={handleClose}
+            onClick={onClose}
             className="border-slate-700 text-slate-300 hover:bg-slate-800"
           >
             Cancel
@@ -218,7 +221,7 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
             {isPending ? (
               <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>
             ) : (
-              'Record transaction'
+              'Save changes'
             )}
           </Button>
         </DialogFooter>

@@ -33,7 +33,7 @@ export interface Transaction {
   transaction_date: string;
   amount: number;
   transaction_type: 'Income' | 'Expense';
-  status: 'Cash' | 'Receivable';
+  status: 'Cash' | 'Receivable' | 'Voided';
   program_id: number | null;
   programs?: {
     program_name: string;

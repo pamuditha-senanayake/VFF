@@ -74,6 +74,57 @@ async def get_transactions_by_type(
 
     return response.data or []
 
+@router.put("/transactions/{transaction_id}", response_model=FinancialTransaction)
+async def update_transaction(
+    transaction_id: int,
+    transaction: FinancialTransactionCreate,
+    user = Depends(check_user_role(["admin", "finance"])),
+    supabase: Client = Depends(get_supabase)
+):
+    if transaction.amount <= 0:
+        raise HTTPException(status_code=400, detail="Transaction amount must be strictly positive.")
+
+    data = transaction.model_dump()
+    data["transaction_date"] = str(data["transaction_date"])
+    data["amount"] = float(data["amount"])
+
+    response = supabase.table("financial_transactions") \
+        .update(data) \
+        .eq("id", transaction_id) \
+        .execute()
+
+    if not response.data:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    return response.data[0]
+
+
+@router.patch("/transactions/{transaction_id}/void", response_model=FinancialTransaction)
+async def void_transaction(
+    transaction_id: int,
+    user = Depends(check_user_role(["admin", "finance"])),
+    supabase: Client = Depends(get_supabase)
+):
+    # Check it exists and isn't already voided
+    existing = supabase.table("financial_transactions") \
+        .select("*") \
+        .eq("id", transaction_id) \
+        .single() \
+        .execute()
+
+    if not existing.data:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    if existing.data.get("status") == "Voided":
+        raise HTTPException(status_code=400, detail="Transaction is already voided")
+
+    response = supabase.table("financial_transactions") \
+        .update({"status": "Voided"}) \
+        .eq("id", transaction_id) \
+        .execute()
+
+    return response.data[0]
+
 
 # ==========================================
 # 2. PROGRAMS

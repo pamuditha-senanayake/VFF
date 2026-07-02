@@ -25,6 +25,7 @@ class TransactionType(str, Enum):
 class TransactionStatus(str, Enum):
     CASH = "Cash"
     RECEIVABLE = "Receivable"
+    VOIDED = "Voided"
 
 # --- Financial Transaction Schemas ---
 class FinancialTransactionBase(BaseModel):
@@ -37,6 +38,16 @@ class FinancialTransactionBase(BaseModel):
 class FinancialTransactionCreate(FinancialTransactionBase):
     pass
 
+# Add this tiny class right above your FinancialTransaction class
+class LinkedProgram(BaseModel):
+    program_name: str
+
+# Update your existing response model to include the linked program
 class FinancialTransaction(FinancialTransactionBase):
     id: int
-    model_config = ConfigDict(from_attributes=True, json_encoders={Decimal: float})
+    programs: Optional[LinkedProgram] = None  # This catches the joined data!
+    
+    model_config = ConfigDict(
+        from_attributes=True, 
+        json_encoders={Decimal: float}
+    )

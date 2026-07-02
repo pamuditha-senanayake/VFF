@@ -22,6 +22,16 @@ export const FinanceService = {
     return response.data;
   },
 
+  updateTransaction: async (id: number, transaction: Omit<Transaction, 'id' | 'programs'>) => {
+  const response = await api.put<Transaction>(`/finance/transactions/${id}`, transaction);
+  return response.data;
+},
+
+voidTransaction: async (id: number) => {
+  const response = await api.patch<Transaction>(`/finance/transactions/${id}/void`);
+  return response.data;
+},
+
   getSummary: async () => {
     const response = await api.get<{
       cash_available: number;
