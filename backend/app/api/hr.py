@@ -52,3 +52,37 @@ async def lock_attendance(target_date: date, supabase: Client = Depends(get_supa
 async def get_payroll(month: int, year: int, supabase: Client = Depends(get_supabase)):
     response = supabase.table("payroll_ledger").select("*").eq("payroll_month", month).eq("payroll_year", year).execute()
     return response.data
+
+@router.post("/payroll/generate", response_model=List[PayrollLedger])
+async def generate_monthly_payroll(
+    month: int,
+    year: int,
+    user = Depends(check_user_role(["admin", "finance", "director"])),
+    supabase: Client = Depends(get_supabase)
+):
+    try:
+        result = supabase.rpc(
+            "generate_monthly_payroll",
+            {"p_month": month, "p_year": year}
+        ).execute()
+
+        return result.data
+
+    except HTTPException:
+        # Re-raise our own HTTPExceptions untouched, don't let
+        # the generic handler below swallow and re-wrap them.
+        raise
+
+    except Exception as e:
+        msg = str(e)
+
+        if "already been processed" in msg:
+            raise HTTPException(status_code=400, detail=msg)
+
+        if "No active employees found" in msg:
+            raise HTTPException(status_code=404, detail=msg)
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Payroll generation failed: {msg}"
+        )

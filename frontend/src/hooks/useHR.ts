@@ -30,3 +30,20 @@ export function useLockAttendance() {
     }
   });
 }
+export function useRunPayroll() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ month, year }: { month: number; year: number }) =>
+      HRService.generatePayroll(month, year),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payroll'] });
+      toast.success('Payroll generated successfully');
+    },
+    onError: (error: any) => {
+      const detail = error?.response?.data?.detail;
+      const message = typeof detail === 'string' ? detail : 'Failed to generate payroll';
+      toast.error(message);
+    },
+  });
+}
