@@ -1,73 +1,75 @@
-Feature: Light Mode support across every page, component, and popup
+Feature: Light Mode enhancements and default state settings
 
-  Scenario: Redesign sidebar using CSS variables
+  Scenario: Redesign sidebar logo text color for light mode
     Given the dashboard sidebar is rendered
-    Then the background should match "bg-bg-brand" variable
-    And the border should match "border-border-brand" variable
+    Then the logo text should change to dark color in light mode
 
-  Scenario: Redesign topbar using CSS variables
-    Given the dashboard topbar is rendered
-    Then the container background should match "bg-bg-brand/80"
+  Scenario: Redesign sidebar active links for light mode
+    Given the dashboard sidebar is rendered
+    When the active link is displayed in light mode
+    Then the active link background should be dark block color
+    And the active link text color should be white
 
-  Scenario: Add theme toggle menu item to profile dropdown
-    Given the topbar profile menu is open
-    Then a theme toggle button should be visible
-    And display "Light Mode" or "Dark Mode" relative to current state
+  Scenario: Redesign login page background
+    Given the login page is rendered
+    Then the outer container should match "bg-bg-brand"
+    And the text should match "text-text-primary"
 
-  Scenario: Persist theme mode preference
-    Given the user changes theme state
-    Then the Zustand store should persist choice to localstorage
+  Scenario: Redesign register page background
+    Given the register page is rendered
+    Then the outer container should match "bg-bg-brand"
+    And the text should match "text-text-primary"
 
-  Scenario: Register ThemeProvider wrapper
-    Given the RootLayout is mounted
-    Then the children should be wrapped by ThemeProvider
+  Scenario: Redesign admin login page background
+    Given the admin login page is rendered
+    Then the outer container should match "bg-bg-brand"
+    And the text should match "text-text-primary"
 
-  Scenario: Remove dark class in light mode
-    Given the global theme state is set to "light"
-    Then the html root element should not contain class "dark"
-    And contain class "light"
+  Scenario: Redesign admin register page background
+    Given the admin register page is rendered
+    Then the outer container should match "bg-bg-brand"
+    And the text should match "text-text-primary"
 
-  Scenario: Add dark class in dark mode
-    Given the global theme state is set to "dark"
-    Then the html root element should contain class "dark"
-    And not contain class "light"
+  Scenario: Set default theme mode to light
+    Given the theme store is initialized
+    Then the default theme value should be "light"
 
-  Scenario: Set light mode variables in settings
-    Given the user is on the settings page
-    When the user toggles the theme switch to light
-    Then the global theme state should update to "light"
+  Scenario: Ensure input text is visible in dark mode login form
+    Given the user is on the login page in dark mode
+    When the user types inside an input
+    Then the input text color should be "text-text-primary"
 
-  Scenario: Set dark mode variables in settings
-    Given the user is on the settings page
-    When the user toggles the theme switch to dark
-    Then the global theme state should update to "dark"
+  Scenario: Ensure input text is visible in dark mode register form
+    Given the user is on the register page in dark mode
+    When the user types inside an input
+    Then the input text color should be "text-text-primary"
 
-  Scenario: Render SweetAlert2 user delete in light mode
-    Given the user is in light mode
-    When the user clicks delete user
-    Then SweetAlert2 should use background "#FFFFFF" and text "#111318"
+  Scenario: Ensure input text is visible in dark mode admin login form
+    Given the user is on the admin login page in dark mode
+    When the user types inside an input
+    Then the input text color should be "text-text-primary"
 
-  Scenario: Render SweetAlert2 user delete in dark mode
-    Given the user is in dark mode
-    When the user clicks delete user
-    Then SweetAlert2 should use background "#0F1520" and text "#F9FAFB"
+  Scenario: Ensure input text is visible in dark mode admin register form
+    Given the user is on the admin register page in dark mode
+    When the user types inside an input
+    Then the input text color should be "text-text-primary"
 
-  Scenario: Render SweetAlert2 add employee in light mode
-    Given the user is in light mode
-    When the user clicks add employee
-    Then SweetAlert2 dialog should adapt background to white
+  Scenario: Redesign homepage background using theme variables
+    Given the homepage is rendered
+    Then the root container should match "bg-bg-brand"
+    And the text should match "text-text-primary"
 
-  Scenario: Render SweetAlert2 add employee in dark mode
-    Given the user is in dark mode
-    When the user clicks add employee
-    Then SweetAlert2 dialog should adapt background to dark slate
+  Scenario: Redesign homepage navigation header background
+    Given the homepage is rendered
+    Then the header background should match "bg-bg-brand/90"
+    And the border should match "border-border-brand"
 
-  Scenario: Render SweetAlert2 initialize program in light mode
-    Given the user is in light mode
-    When the user clicks initialize program
-    Then SweetAlert2 dialog background should be light
+  Scenario: Redesign homepage about section using theme variables
+    Given the homepage about section is rendered
+    Then the container background should match "bg-bg-subtle"
+    And the border should match "border-border-brand"
 
-  Scenario: Render SweetAlert2 initialize program in dark mode
-    Given the user is in dark mode
-    When the user clicks initialize program
-    Then SweetAlert2 dialog background should be dark
+  Scenario: Redesign homepage impact cards using theme variables
+    Given the homepage impact section is rendered
+    Then the cards background should match "bg-surface"
+    And the card borders should match "border-border-brand"

@@ -1,7 +1,7 @@
 import pytest
 
 THEME_CONFIGS = {
-    "default_theme": "dark",
+    "default_theme": "light",
     "dark": {
         "class": "dark",
         "bg": "#0B0D12",
@@ -29,7 +29,7 @@ THEME_CONFIGS = {
 }
 
 def test_default_theme_value():
-    assert THEME_CONFIGS["default_theme"] == "dark"
+    assert THEME_CONFIGS["default_theme"] == "light"
 
 def test_dark_mode_class():
     assert THEME_CONFIGS["dark"]["class"] == "dark"

@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthService } from '@/services/auth.service';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { AuthService } from '@/services/auth.service';
+import { Mail, Lock, Eye, EyeOff, ShieldCheck, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AdminRegisterPage() {
   const [email, setEmail] = useState('');
@@ -15,33 +16,45 @@ export default function AdminRegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  
   const router = useRouter();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error('Passwords do not match.');
       return;
     }
     setLoading(true);
+
     try {
-      await AuthService.register({ email, password, role_id: 1 }); // 1 is Admin
-      toast.success('Administrator account initialized successfully');
-      router.push('/login');
+      // Mock name extraction
+      const mockName = email.split('@')[0];
+      const data = await AuthService.register({
+        email,
+        password,
+        name: mockName.charAt(0).toUpperCase() + mockName.slice(1) + ' (Admin)',
+        role: 'Admin'
+      });
+      
+      setAuth(data.user, data.access_token);
+      toast.success('Administrator registry generated successfully.');
+      router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Failed to initialize administrator registry');
+      toast.error(err.response?.data?.detail || 'Admin signup failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#0B0D12] text-[#F9FAFB] font-sans selection:bg-[#EF9F27]/30 overflow-hidden">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-bg-brand text-text-primary font-sans selection:bg-[#EF9F27]/30 overflow-hidden">
       
       {/* Left Pane - Inset Space Visuals Container */}
       <div className="hidden md:flex p-6 h-full w-full">
         <div 
-          className="relative flex-1 flex flex-col justify-between p-10 bg-cover bg-center rounded-2xl overflow-hidden border border-[#232730] shadow-2xl"
+          className="relative flex-1 flex flex-col justify-between p-10 bg-cover bg-center rounded-2xl overflow-hidden border border-border-brand shadow-2xl"
           style={{ 
             backgroundImage: "url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=1200&q=80')" 
           }}
@@ -49,15 +62,13 @@ export default function AdminRegisterPage() {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D12]/60 via-transparent to-[#0B0D12]/95 pointer-events-none" />
           
-          {/* Top Row: Back link & Title */}
-          <div className="relative z-10 flex justify-between items-center w-full">
+          {/* Top Row: Logo & Back Button */}
+          <div className="relative flex justify-between items-center z-10 w-full">
             <Link 
-              href="/" 
-              className="inline-flex items-center gap-2 text-xs text-[#9CA3AF] hover:text-white transition-colors duration-150 group font-medium"
-              id="back-to-website-btn"
+              href="/"
+              className="text-[11px] font-bold text-white/70 bg-bg-brand/80 py-2 px-4 rounded-lg flex items-center gap-1 border border-border-brand backdrop-blur-md hover:text-white hover:bg-white/10 transition-all duration-150"
             >
-              <ArrowLeft size={14} className="transform group-hover:-translate-x-1 transition-transform duration-150" />
-              <span>Back to website</span>
+              Back to website →
             </Link>
             <span className="text-[10px] font-mono tracking-wider text-[#EF9F27] font-semibold bg-[#EF9F27]/10 px-3 py-1 rounded-full border border-[#EF9F27]/25">
               VFF SYSTEM
@@ -82,15 +93,15 @@ export default function AdminRegisterPage() {
       </div>
 
       {/* Right Pane - Form directly on Background */}
-      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative bg-[#0B0D12]">
+      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative bg-bg-brand">
         <div className="w-full max-w-md flex flex-col gap-8">
           
           {/* Header */}
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-white font-heading">
+            <h2 className="text-3xl font-bold tracking-tight text-text-primary font-heading">
               Create an administrator account
             </h2>
-            <p className="text-xs text-[#9CA3AF]">
+            <p className="text-xs text-text-secondary">
               Already have an admin account?{' '}
               <Link href="/login/admin" className="text-[#EF9F27] hover:underline font-semibold">
                 Log in
@@ -102,12 +113,12 @@ export default function AdminRegisterPage() {
           <form onSubmit={handleRegister} className="space-y-4">
             {/* Email Field */}
             <div className="relative">
-              <Mail className="absolute left-4 top-[14px] text-[#9CA3AF]/40" size={16} />
+              <Mail className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="Admin Email Address" 
-                className="pl-11 bg-[#14161C] border-[#232730] text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-[#9CA3AF]/30 text-xs"
+                className="pl-11 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -116,19 +127,19 @@ export default function AdminRegisterPage() {
             
             {/* Password Field */}
             <div className="relative">
-              <Lock className="absolute left-4 top-[14px] text-[#9CA3AF]/40" size={16} />
+              <Lock className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="password" 
                 type={showPassword ? "text" : "password"}
                 placeholder="Admin Password" 
-                className="pl-11 pr-10 bg-[#14161C] border-[#232730] text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-[#9CA3AF]/30 text-xs"
+                className="pl-11 pr-10 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="absolute right-4 top-[14px] text-[#9CA3AF]/40 hover:text-white"
+                className="absolute right-4 top-[14px] text-text-secondary/40 hover:text-text-primary"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -137,12 +148,12 @@ export default function AdminRegisterPage() {
 
             {/* Confirm Password Field */}
             <div className="relative">
-              <Lock className="absolute left-4 top-[14px] text-[#9CA3AF]/40" size={16} />
+              <Lock className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="confirm-password" 
                 type={showPassword ? "text" : "password"}
                 placeholder="Confirm Admin Password" 
-                className="pl-11 bg-[#14161C] border-[#232730] text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-[#9CA3AF]/30 text-xs"
+                className="pl-11 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -161,27 +172,27 @@ export default function AdminRegisterPage() {
 
           {/* Social Divider */}
           <div className="relative flex py-2 items-center">
-            <div className="flex-grow border-t border-[#232730]" />
-            <span className="flex-shrink mx-4 text-[10px] text-[#9CA3AF]/45 font-bold uppercase tracking-wider">
-              Or initialize with
+            <div className="flex-grow border-t border-border-brand" />
+            <span className="flex-shrink mx-4 text-[10px] text-text-secondary/45 font-bold uppercase tracking-wider">
+              Or register with
             </span>
-            <div className="flex-grow border-t border-[#232730]" />
+            <div className="flex-grow border-t border-border-brand" />
           </div>
 
           {/* Social Buttons */}
           <div className="grid grid-cols-2 gap-3">
             <button 
               type="button" 
-              className="flex items-center justify-center gap-2 py-2.5 border border-[#232730] hover:bg-[#14161C] rounded-lg text-xs font-semibold text-white transition-all duration-150"
+              className="flex items-center justify-center gap-2 py-2.5 border border-border-brand hover:bg-bg-subtle rounded-lg text-xs font-semibold text-text-primary transition-all duration-150"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.24 10.285qV14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.466 0-6.277-2.85-6.277-6.36s2.81-6.358 6.277-6.358c1.55 0 2.96.57 4.05 1.51l3.11-3.11C18.82 2.05 15.76 1 12.24 1 5.92 1 1 5.92 1 12.24s4.92 11.24 11.24 11.24c6.64 0 11.08-4.66 11.08-11.24 0-.76-.07-1.33-.21-1.96H12.24z"/>
+                <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114-3.466 0-6.277-2.85-6.277-6.36s2.81-6.358 6.277-6.358c1.55 0 2.96.57 4.05 1.51l3.11-3.11C18.82 2.05 15.76 1 12.24 1 5.92 1 12.24s4.92 11.24 11.24 11.24c6.64 0 11.08-4.66 11.08-11.24 0-.76-.07-1.33-.21-1.96H12.24z"/>
               </svg>
               Google
             </button>
             <button 
               type="button" 
-              className="flex items-center justify-center gap-2 py-2.5 border border-[#232730] hover:bg-[#14161C] rounded-lg text-xs font-semibold text-white transition-all duration-150"
+              className="flex items-center justify-center gap-2 py-2.5 border border-border-brand hover:bg-bg-subtle rounded-lg text-xs font-semibold text-text-primary transition-all duration-150"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.7-1.13 1.84-.99 2.94.1.08.2.12.31.12.87 0 1.99-.57 2.51-1.45z"/>
@@ -191,8 +202,8 @@ export default function AdminRegisterPage() {
           </div>
           
           {/* Footer Terms Note */}
-          <p className="text-[10px] text-[#9CA3AF]/40 text-center">
-            Internal administrative configuration portal. Confidential.
+          <p className="text-[10px] text-text-secondary/45 text-center">
+            Internal use only by VFF. Proprietary and Confidential.
           </p>
 
         </div>

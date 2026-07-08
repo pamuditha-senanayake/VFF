@@ -82,7 +82,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
       <div className="h-16 flex items-center justify-between px-6 border-b border-border-brand">
         {!isCollapsed ? (
           <Link href="/" className="cursor-pointer">
-            <span className="text-xl font-bold font-heading bg-gradient-to-r from-amber-400 to-[#EF9F27] bg-clip-text text-transparent hover:opacity-90">
+            <span className="text-xl font-bold font-heading dark:bg-gradient-to-r dark:from-amber-400 dark:to-[#EF9F27] dark:bg-clip-text dark:text-transparent light:text-[#0B0D12] text-text-primary hover:opacity-90">
               VFF IMS
             </span>
           </Link>
@@ -134,7 +134,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                           )}
                         >
                           <div className="flex items-center gap-3">
-                            <Icon size={20} className={isActive ? "text-[#EF9F27]" : "text-text-secondary"} />
+                            <Icon size={20} className={isActive ? "dark:text-[#EF9F27] light:text-white" : "text-text-secondary"} />
                             <span className="text-sm font-medium">{item.label}</span>
                           </div>
                           <ChevronDown size={16} className={cn("transition-transform", isAdminExpanded && "rotate-180")} />
@@ -148,7 +148,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                               <div className={cn(
                                 "flex items-center gap-3 py-2 rounded-lg cursor-pointer transition-colors pl-8 pr-2 mt-0.5",
                                 isSubActive 
-                                  ? "bg-amber-500/10 text-[#EF9F27] border-l-2 border-[#EF9F27] rounded-l-none pl-7" 
+                                  ? "dark:bg-amber-500/10 dark:text-[#EF9F27] dark:border-[#EF9F27] light:bg-[#0B0D12] light:text-white light:border-[#0B0D12] border-l-2 border-[#EF9F27] rounded-l-none pl-7" 
                                   : "hover:bg-bg-subtle text-text-secondary hover:text-text-primary"
                               )}>
                                 <SubIcon size={16} />
@@ -166,12 +166,12 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                       <div className={cn(
                         "flex items-center gap-3 py-2.5 rounded-lg transition-colors group cursor-pointer",
                         isActive 
-                          ? "bg-amber-500/10 text-[#EF9F27] border-l-4 border-[#EF9F27] rounded-l-none pl-2" 
+                          ? "dark:bg-amber-500/10 dark:text-[#EF9F27] dark:border-[#EF9F27] light:bg-[#0B0D12] light:text-white light:border-[#0B0D12] border-l-4 rounded-l-none pl-2" 
                           : "hover:bg-bg-subtle text-text-secondary hover:text-text-primary pl-3"
                       )}>
                         <Icon size={20} className={cn(
                           "shrink-0",
-                          isActive ? "text-[#EF9F27]" : "text-text-secondary group-hover:text-text-primary"
+                          isActive ? "dark:text-[#EF9F27] light:text-white" : "text-text-secondary group-hover:text-text-primary"
                         )} />
                         {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
                       </div>

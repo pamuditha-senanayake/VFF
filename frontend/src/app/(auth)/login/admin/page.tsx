@@ -43,12 +43,12 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#0B0D12] text-[#F9FAFB] font-sans selection:bg-[#EF9F27]/30 overflow-hidden">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-bg-brand text-text-primary font-sans selection:bg-[#EF9F27]/30 overflow-hidden">
       
       {/* Left Pane - Inset Space Visuals Container */}
       <div className="hidden md:flex p-6 h-full w-full">
         <div 
-          className="relative flex-1 flex flex-col justify-between p-10 bg-cover bg-center rounded-2xl overflow-hidden border border-[#232730] shadow-2xl"
+          className="relative flex-1 flex flex-col justify-between p-10 bg-cover bg-center rounded-2xl overflow-hidden border border-border-brand shadow-2xl"
           style={{ 
             backgroundImage: "url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1600&q=80')" 
           }}
@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
             </span>
             <Link 
               href="/"
-              className="text-[11px] font-bold text-white/70 bg-[#14161C]/80 py-2 px-4 rounded-lg flex items-center gap-1 border border-[#232730] backdrop-blur-md hover:text-white hover:bg-white/10 transition-all duration-150"
+              className="text-[11px] font-bold text-white/70 bg-bg-brand/80 py-2 px-4 rounded-lg flex items-center gap-1 border border-border-brand backdrop-blur-md hover:text-white hover:bg-white/10 transition-all duration-150"
             >
               Back to website →
             </Link>
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
       </div>
 
       {/* Right Pane - Form directly on Background */}
-      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative bg-[#0B0D12]">
+      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative bg-bg-brand">
         <div className="w-full max-w-md flex flex-col gap-8">
           
           {/* Header */}
@@ -96,10 +96,10 @@ export default function AdminLoginPage() {
               <ShieldAlert size={18} />
               <span className="text-[10px] font-bold uppercase tracking-wider font-mono">Secure Node Access</span>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-white font-heading">
+            <h2 className="text-3xl font-bold tracking-tight text-text-primary font-heading">
               Admin portal access
             </h2>
-            <p className="text-xs text-[#9CA3AF]">
+            <p className="text-xs text-text-secondary">
               Authorized IT administrator personnel only.{' '}
               <Link href="/login" className="text-[#EF9F27] hover:underline font-semibold">
                 User Login
@@ -111,12 +111,12 @@ export default function AdminLoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Email Field */}
             <div className="relative">
-              <Mail className="absolute left-4 top-[14px] text-[#9CA3AF]/40" size={16} />
+              <Mail className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="Admin Email Address" 
-                className="pl-11 bg-[#14161C] border-[#232730] text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-[#9CA3AF]/30 text-xs"
+                className="pl-11 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -125,19 +125,19 @@ export default function AdminLoginPage() {
             
             {/* Password Field */}
             <div className="relative">
-              <Lock className="absolute left-4 top-[14px] text-[#9CA3AF]/40" size={16} />
+              <Lock className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="password" 
                 type={showPassword ? "text" : "password"}
                 placeholder="Password" 
-                className="pl-11 pr-10 bg-[#14161C] border-[#232730] text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-[#9CA3AF]/30 text-xs"
+                className="pl-11 pr-10 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="absolute right-4 top-[14px] text-[#9CA3AF]/40 hover:text-white"
+                className="absolute right-4 top-[14px] text-text-secondary/40 hover:text-text-primary"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -165,7 +165,7 @@ export default function AdminLoginPage() {
           </form>
           
           {/* Footer Terms Note */}
-          <p className="text-[10px] text-[#9CA3AF]/40 text-center">
+          <p className="text-[10px] text-text-secondary/45 text-center">
             Internal use only by VFF. Proprietary and Confidential.
           </p>
 
