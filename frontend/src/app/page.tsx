@@ -1,21 +1,53 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MapPin, Mail, Phone, Clock, Activity, ShieldCheck, Heart } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Homepage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const heroSlides = [
+    {
+      image: '/images/galle-project.jpg',
+      title: 'GALLE STERILIZATION PROJECT',
+      subtitle: "VETS FOR FUTURE — SRI LANKA'S LARGEST STERILIZATION INITIATIVE",
+    },
+    {
+      image: '/images/sigiriya-project.jpg',
+      title: 'SIGIRIYA ANCIENT CITY PROJECT',
+      subtitle: 'VETS FOR FUTURE — TOURIST & COMMUNITY SAFETY PROGRAM',
+    },
+    {
+      image: '/images/anuradhapura-project.jpg',
+      title: 'ANURADHAPURA PROJECT',
+      subtitle: 'VETS FOR FUTURE — 5-YEAR TEMPLE AREA STERILIZATION PROGRAM',
+    },
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-white font-sans selection:bg-[#3b82f6]/30 overflow-x-hidden flex flex-col justify-between">
 
       {/* Navigation */}
       <header className="sticky top-0 z-50 w-full border-b border-[#1e293b] bg-[#0d1117]/80 backdrop-blur-md">
-        <div className="max-w-[1280px] mx-auto px-[24px] md:px-[48px] lg:px-[80px] h-[64px] flex justify-between items-center">
-          <Link href="/" className="text-[15px] font-extrabold tracking-[0.05em] uppercase text-white">
-            VFF
+        <div className="max-w-[1280px] mx-auto px-[24px] md:px-[48px] lg:px-[80px] h-[80px] flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image src="/vff-logo.png" alt="Vets For Future" width={56} height={56} className="h-14 w-14 object-contain" />
+            <span className="text-[15px] font-extrabold tracking-[0.05em] uppercase text-white">
+              VFF
+            </span>
           </Link>
           <nav className="flex items-center gap-[24px] text-[14px] font-medium text-[#94a3b8]">
             <Link href="/" className="hover:text-white transition-colors duration-150">Home</Link>
@@ -74,25 +106,44 @@ export default function Homepage() {
               </div>
             </div>
 
-            {/* Image column */}
+            {/* Image column — auto-rotating carousel of real field project photos */}
             <div className="relative w-full h-[280px] md:h-[400px] rounded-2xl overflow-hidden border border-[#2d3748] shadow-2xl bg-slate-900 group">
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1600&q=80')" }}
-              />
+              {heroSlides.map((slide, index) => (
+                <div
+                  key={slide.image}
+                  className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 group-hover:scale-105 ${
+                    index === activeSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ backgroundImage: `url('${slide.image}')` }}
+                />
+              ))}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d1117]/10 to-[#0d1117]/85" />
 
               <div className="absolute top-6 right-6 text-[12px] font-semibold text-[#cbd5e1] font-mono bg-[#0d1117]/60 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10">
-                01 / 03
+                {String(activeSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
               </div>
 
               <div className="absolute bottom-6 left-6 right-6 space-y-1">
                 <p className="text-[11px] tracking-[0.15em] text-[#cbd5e1] font-bold uppercase">
-                  VFF VETERINARY CLINIC CARE CENTER
+                  {heroSlides[activeSlide].title}
                 </p>
                 <p className="text-[9px] tracking-[0.08em] text-[#6b7280] font-medium uppercase">
-                  VETS FOR FUTURE — PUBLIC HEALTH DIVISION
+                  {heroSlides[activeSlide].subtitle}
                 </p>
+              </div>
+
+              {/* Slide dots */}
+              <div className="absolute bottom-6 right-6 flex gap-1.5">
+                {heroSlides.map((slide, index) => (
+                  <button
+                    key={slide.image}
+                    onClick={() => setActiveSlide(index)}
+                    aria-label={`Show slide ${index + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === activeSlide ? 'w-5 bg-white' : 'w-1.5 bg-white/30'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -125,7 +176,7 @@ export default function Homepage() {
             <div className="h-[280px] md:h-[360px] rounded-xl overflow-hidden border border-[#2d3748] relative order-2 lg:order-1">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1200&q=80')" }}
+                style={{ backgroundImage: "url('/images/mannar-project.jpg')" }}
               />
               <div className="absolute inset-0 bg-[#0d1117]/20" />
             </div>
@@ -269,7 +320,7 @@ export default function Homepage() {
             <div className="h-[280px] md:h-[320px] rounded-xl overflow-hidden border border-[#2d3748] relative">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=1200&q=80')" }}
+                style={{ backgroundImage: "url('/images/vff-team.jpg')" }}
               />
               <div className="absolute inset-0 bg-[#0d1117]/35" />
               <div className="absolute bottom-6 left-6 text-[12px] font-mono text-[#cbd5e1] bg-[#0d1117]/80 py-1.5 px-3 rounded border border-white/5 flex items-center gap-1.5">
@@ -286,7 +337,10 @@ export default function Homepage() {
         <div className="max-w-[1280px] mx-auto px-[24px] md:px-[48px] lg:px-[80px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-[48px]">
 
           <div className="space-y-[16px]">
-            <span className="text-[18px] font-bold text-white">VFF IMS</span>
+            <div className="flex items-center gap-2.5">
+              <Image src="/vff-logo.png" alt="Vets For Future" width={44} height={44} className="h-11 w-11 object-contain" />
+              <span className="text-[18px] font-bold text-white">VFF IMS</span>
+            </div>
             <p className="text-[#8b9ab0] text-[13px] leading-relaxed">
               Digitizing animal welfare operations through integrated administrative systems, secure RBAC validation, and immutable auditing ledgers.
             </p>
