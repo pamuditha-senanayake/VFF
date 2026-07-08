@@ -90,11 +90,11 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4 bg-black/60 backdrop-blur-xs">
       <div 
         ref={modalRef}
-        className="w-full max-w-[550px] bg-[#14161C] border border-[#232730] rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-[550px] bg-surface border border-border-brand rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Input */}
-        <div className="flex items-center px-4 py-3 border-b border-[#232730] gap-3">
-          <Search className="w-5 h-5 text-[#6B7280]" />
+        <div className="flex items-center px-4 py-3 border-b border-border-brand gap-3">
+          <Search className="w-5 h-5 text-text-secondary" />
           <input
             autoFocus
             type="text"
@@ -104,9 +104,9 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               setSearch(e.target.value);
               setActiveIndex(0);
             }}
-            className="flex-1 bg-transparent border-0 text-sm text-[#F9FAFB] placeholder-[#6B7280] focus:ring-0 focus:outline-hidden"
+            className="flex-1 bg-transparent border-0 text-sm text-text-primary placeholder:text-text-secondary/60 focus:ring-0 focus:outline-hidden"
           />
-          <kbd className="px-2 py-0.5 text-[10px] font-mono text-[#6B7280] bg-[#1F232D] border border-[#2D3342] rounded-md">
+          <kbd className="px-2 py-0.5 text-[10px] font-mono text-text-secondary bg-bg-brand border border-border-brand rounded-md">
             ESC
           </kbd>
         </div>
@@ -114,7 +114,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         {/* Results */}
         <div className="max-h-[300px] overflow-y-auto p-2">
           {filtered.length === 0 ? (
-            <div className="py-6 text-center text-sm text-[#6B7280]">
+            <div className="py-6 text-center text-sm text-text-secondary">
               No results found.
             </div>
           ) : (
@@ -132,7 +132,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
                     isSelected 
                       ? 'bg-amber-500/10 text-[#EF9F27]' 
-                      : 'text-[#9CA3AF] hover:bg-[#1C202B] hover:text-[#F9FAFB]'
+                      : 'text-text-secondary hover:bg-bg-subtle hover:text-text-primary'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />

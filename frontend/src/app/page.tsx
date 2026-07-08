@@ -125,12 +125,12 @@ export default function Homepage() {
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1600&q=80')" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0B0D12]/20 to-[#0B0D12]/90" />
-              <div className="absolute top-6 right-6 text-[10px] font-bold text-[#F9FAFB] font-mono bg-[#0B0D12]/60 backdrop-blur-md py-1.5 px-3 rounded-full border border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:via-[#0B0D12]/20 dark:to-[#0B0D12]/90 light:via-white/20 light:to-white/95" />
+              <div className="absolute top-6 right-6 text-[10px] font-bold text-text-primary dark:text-[#F9FAFB] font-mono bg-surface/60 backdrop-blur-md py-1.5 px-3 rounded-full border border-border-brand">
                 01 / 03
               </div>
               <div className="absolute bottom-6 left-6 right-6 space-y-1">
-                <p className="text-[10px] tracking-wider text-[#F9FAFB] font-bold uppercase">
+                <p className="text-[10px] tracking-wider text-text-primary dark:text-[#F9FAFB] font-bold uppercase">
                   VFF Central Clinic Care
                 </p>
                 <p className="text-[9px] tracking-wider text-[#9CA3AF] font-medium uppercase">
@@ -166,7 +166,7 @@ export default function Homepage() {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1200&q=80')" }}
               />
-              <div className="absolute inset-0 bg-[#0B0D12]/30" />
+              <div className="absolute inset-0 dark:bg-[#0B0D12]/30 light:bg-white/10" />
             </div>
 
             <div className="space-y-6 order-1 lg:order-2">
@@ -249,8 +249,8 @@ export default function Homepage() {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=1200&q=80')" }}
               />
-              <div className="absolute inset-0 bg-[#0B0D12]/35" />
-              <div className="absolute bottom-6 left-6 text-[10px] font-mono text-[#F9FAFB] bg-[#0B0D12]/80 py-1.5 px-3 rounded border border-white/5 flex items-center gap-1.5">
+              <div className="absolute inset-0 dark:bg-[#0B0D12]/35 light:bg-white/10" />
+              <div className="absolute bottom-6 left-6 text-[10px] font-mono text-text-primary dark:text-[#F9FAFB] bg-surface/80 py-1.5 px-3 rounded border border-border-brand flex items-center gap-1.5">
                 <Clock size={14} /> Emergency Coordinates Active
               </div>
             </div>
