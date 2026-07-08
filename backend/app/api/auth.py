@@ -63,3 +63,12 @@ async def get_users(supabase: Client = Depends(get_supabase)):
         return response.data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.delete("/users/{user_id}")
+async def delete_user(user_id: str, supabase: Client = Depends(get_supabase)):
+    try:
+        response = supabase.table("users").delete().eq("id", user_id).execute()
+        return {"message": "User deleted successfully", "data": response.data}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+

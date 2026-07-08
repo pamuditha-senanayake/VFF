@@ -28,5 +28,10 @@ export const AuthService = {
   updateUserRole: async (userId: string, roleId: number) => {
     const response = await api.put(`/auth/users/${userId}/role`, { role_id: roleId });
     return response.data;
+  },
+  
+  deleteUser: async (userId: string) => {
+    const response = await api.delete(`/auth/users/${userId}`);
+    return response.data;
   }
 };

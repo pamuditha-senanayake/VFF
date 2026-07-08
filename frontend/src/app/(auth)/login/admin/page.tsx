@@ -43,80 +43,73 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[#13111c] text-white font-sans selection:bg-[#6366f1]/30 overflow-hidden">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-bg-brand text-text-primary font-sans selection:bg-[#EF9F27]/30 overflow-hidden">
       
       {/* Left Pane - Inset Space Visuals Container */}
-      <div className="hidden md:flex p-[24px] h-full w-full">
+      <div className="hidden md:flex p-6 h-full w-full">
         <div 
-          className="relative flex-1 flex flex-col justify-between p-[40px] bg-cover bg-center rounded-2xl overflow-hidden border border-[#252236]/30 shadow-2xl"
+          className="relative flex-1 flex flex-col justify-between p-10 bg-cover bg-center rounded-2xl overflow-hidden border border-border-brand shadow-2xl"
           style={{ 
             backgroundImage: "url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1600&q=80')" 
           }}
           id="visual-pane"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#13111c]/60 via-transparent to-[#13111c]/95 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/90 via-transparent pointer-events-none" />
           
           {/* Top Row: Logo & Back Button */}
           <div className="relative flex justify-between items-center z-10">
-            <span className="text-[20px] font-extrabold tracking-tight text-white font-sans flex items-center gap-1">
-              VFF
+            <span className="text-lg font-extrabold tracking-wider text-white font-heading">
+              VFF IMS
             </span>
             <Link 
               href="/"
-              className="text-[12px] font-semibold text-white/70 bg-white/5 py-2 px-4 rounded-full flex items-center gap-1 border border-white/10 backdrop-blur-md hover:text-white hover:bg-white/10 transition-all duration-150"
+              className="text-[11px] font-bold text-white/90 hover:text-white bg-black/45 py-2 px-4 rounded-lg flex items-center gap-1 border border-white/10 backdrop-blur-md hover:bg-black/60 transition-all duration-150"
             >
               Back to website →
             </Link>
           </div>
 
-          {/* Bottom Row: Main Caption & Slide Indicators */}
-          <div className="relative z-10 space-y-[32px]">
-            <h1 className="text-[32px] lg:text-[40px] font-bold leading-[1.2] tracking-tight text-white font-sans">
+          {/* Bottom Row: Main Caption */}
+          <div className="relative z-10 space-y-6">
+            <h1 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tight text-white font-heading">
               System administration, <br />
               securing access.
             </h1>
-            
-            {/* Indicators */}
-            <div className="flex gap-[8px] items-center">
-              <span className="h-[2px] w-[32px] bg-white rounded-full transition-all duration-200" />
-              <span className="h-[2px] w-[32px] bg-white/30 rounded-full transition-all duration-200" />
-              <span className="h-[2px] w-[32px] bg-white/30 rounded-full transition-all duration-200" />
-            </div>
           </div>
         </div>
       </div>
 
       {/* Right Pane - Form directly on Background */}
-      <div className="flex items-center justify-center p-[24px] md:p-[48px] lg:p-[80px] relative">
-        <div className="w-full max-w-md flex flex-col gap-[32px]">
+      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative light:bg-[#F8F9FA] bg-bg-brand">
+        <div className="w-full max-w-md flex flex-col gap-8">
           
           {/* Header */}
-          <div className="space-y-[8px]">
-            <div className="flex items-center gap-2 text-rose-500 mb-2">
-              <ShieldAlert size={20} />
-              <span className="text-[12px] font-bold uppercase tracking-widest font-mono">Secure Node Access</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[#EF9F27] mb-1">
+              <ShieldAlert size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-wider font-mono">Secure Node Access</span>
             </div>
-            <h2 className="text-[32px] font-bold tracking-tight text-white font-sans">
+            <h2 className="text-3xl font-bold tracking-tight text-text-primary font-heading">
               Admin portal access
             </h2>
-            <p className="text-[14px] text-[#8b9ab0] font-sans">
+            <p className="text-xs text-text-secondary">
               Authorized IT administrator personnel only.{' '}
-              <Link href="/login" className="text-[#6366f1] hover:underline font-semibold">
+              <Link href="/login" className="text-[#EF9F27] hover:underline font-semibold">
                 User Login
               </Link>
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-[16px]">
+          <form onSubmit={handleLogin} className="space-y-4">
             {/* Email Field */}
             <div className="relative">
-              <Mail className="absolute left-[16px] top-[14px] text-[#8b9ab0]/50" size={18} />
+              <Mail className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="Admin Email Address" 
-                className="pl-11 bg-[#1c1a27] border-[#252236] text-white focus:border-[#6366f1] focus:ring-1 focus:ring-[#6366f1] h-12 rounded-lg font-sans w-full placeholder:text-[#8b9ab0]/40"
+                className="pl-11 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -125,39 +118,39 @@ export default function AdminLoginPage() {
             
             {/* Password Field */}
             <div className="relative">
-              <Lock className="absolute left-[16px] top-[14px] text-[#8b9ab0]/50" size={18} />
+              <Lock className="absolute left-4 top-[14px] text-text-secondary/40" size={16} />
               <Input 
                 id="password" 
                 type={showPassword ? "text" : "password"}
                 placeholder="Password" 
-                className="pl-11 pr-10 bg-[#1c1a27] border-[#252236] text-white focus:border-[#6366f1] focus:ring-1 focus:ring-[#6366f1] h-12 rounded-lg font-sans w-full placeholder:text-[#8b9ab0]/40"
+                className="pl-11 pr-10 bg-bg-subtle border-border-brand text-text-primary focus:border-[#EF9F27] focus:ring-1 focus:ring-[#EF9F27] h-11 rounded-lg w-full placeholder:text-text-secondary/40 text-xs"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="absolute right-[16px] top-[14px] text-[#8b9ab0]/50 hover:text-white"
+                className="absolute right-4 top-[14px] text-text-secondary/40 hover:text-text-primary"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
             
             {/* Primary Action Button */}
             <Button 
               type="submit" 
-              className="w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white font-semibold text-[15px] py-[14px] px-[28px] mt-[8px] transition-all duration-[150ms] rounded-lg active:scale-[0.98] h-auto font-sans shadow-lg shadow-[#6366f1]/10 flex items-center justify-center gap-2"
+              className="w-full bg-[#EF9F27] hover:bg-[#EF9F27]/80 text-[#0B0D12] font-semibold text-xs py-3 px-6 mt-2 transition-all rounded-lg active:scale-95 h-11 flex items-center justify-center gap-2 border-none shadow-md shadow-[#EF9F27]/10"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#0B0D12] border-t-transparent" />
                   Authenticating...
                 </>
               ) : (
                 <>
-                  <LogIn size={18} />
+                  <LogIn size={16} />
                   Authorize Admin Access
                 </>
               )}
@@ -165,7 +158,7 @@ export default function AdminLoginPage() {
           </form>
           
           {/* Footer Terms Note */}
-          <p className="text-[12px] text-[#8b9ab0]/40 text-center font-sans">
+          <p className="text-[10px] text-text-secondary/45 text-center">
             Internal use only by VFF. Proprietary and Confidential.
           </p>
 

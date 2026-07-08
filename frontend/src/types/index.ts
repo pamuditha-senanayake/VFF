@@ -45,6 +45,7 @@ export interface Program {
   program_name: string;
   total_animals_treated: number;
   status: string;
+  budget?: number;
 }
 
 export interface InventoryItem {

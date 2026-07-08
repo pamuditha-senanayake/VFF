@@ -1,59 +1,65 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+'use client';
+
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 interface KPICardProps {
   title: string;
   value: string | number;
   description?: string;
-  icon: LucideIcon;
   trend?: {
     value: number;
     isPositive: boolean;
   };
   className?: string;
-  colorClass?: string;
 }
 
 export function KPICard({ 
   title, 
   value, 
-  description, 
-  icon: Icon, 
+  description = "vs last month", 
   trend, 
-  className,
-  colorClass = "text-blue-400 bg-blue-400/10"
+  className
 }: KPICardProps) {
   return (
-    <Card className={cn("bg-slate-900 border-slate-800", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-slate-400">
+    <Card className={cn(
+      "bg-surface dark:bg-surface border border-border-brand dark:border-border-brand rounded-card shadow-card p-5 md:p-6 transition-all hover:shadow-md", 
+      className
+    )}>
+      <div className="flex flex-col gap-2">
+        {/* Title / Label */}
+        <span className="text-xs font-semibold tracking-wider uppercase text-text-secondary">
           {title}
-        </CardTitle>
-        <div className={cn("p-2 rounded-xl", colorClass)}>
-          <Icon size={20} />
+        </span>
+        
+        {/* Value */}
+        <div className="text-2xl md:text-3xl font-bold font-mono tracking-tight text-text-primary">
+          {value}
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-white">{value}</div>
-        {(description || trend) && (
+        
+        {/* Trend Delta Pill */}
+        {trend && (
           <div className="flex items-center gap-2 mt-1">
-            {trend && (
-              <span className={cn(
-                "text-xs font-medium",
-                trend.isPositive ? "text-emerald-400" : "text-rose-400"
-              )}>
-                {trend.isPositive ? "+" : "-"}{trend.value}%
-              </span>
-            )}
-            {description && (
-              <p className="text-xs text-slate-500">
-                {description}
-              </p>
-            )}
+            <span className={cn(
+              "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold",
+              trend.isPositive 
+                ? "bg-green-500/10 text-positive" 
+                : "bg-red-500/10 text-negative"
+            )}>
+              {trend.isPositive ? (
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              ) : (
+                <ArrowDownRight className="w-3.5 h-3.5" />
+              )}
+              {trend.value}%
+            </span>
+            <span className="text-xs text-text-secondary">
+              {description}
+            </span>
           </div>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

@@ -1,3 +1,9 @@
+import sys
+import os
+vendor_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "_vendor"))
+if os.path.exists(vendor_dir) and vendor_dir not in sys.path:
+    sys.path.insert(0, vendor_dir)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import hr, finance, inventory, auth
