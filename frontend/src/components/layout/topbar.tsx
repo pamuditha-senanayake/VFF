@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Bell, Search, User, Menu, Settings, HelpCircle, LogOut } from 'lucide-react';
+import { Bell, Search, User, Menu, Settings, HelpCircle, LogOut, Globe } from 'lucide-react';
 import { CommandPalette } from '@/components/shared/command-palette';
 import { useRouter } from 'next/navigation';
 
@@ -85,6 +85,15 @@ export function Topbar({ onMenuToggle, title = "Overview" }: TopbarProps) {
 
         {/* Right: Notifications & Avatar */}
         <div className="flex items-center gap-4">
+          {/* Globe/Website back link */}
+          <button 
+            onClick={() => router.push('/')}
+            className="p-1.5 text-[#9CA3AF] hover:text-[#F9FAFB] rounded-lg hover:bg-[#14161C] transition-colors"
+            title="Go to Website Home"
+          >
+            <Globe className="w-5 h-5" />
+          </button>
+
           {/* Notification Bell */}
           <div className="relative" ref={notifRef}>
             <button 
@@ -135,6 +144,13 @@ export function Topbar({ onMenuToggle, title = "Overview" }: TopbarProps) {
                   <p className="text-[10px] text-[#6B7280] truncate mt-0.5">{user?.email || 'user@example.com'}</p>
                 </div>
                 <div className="p-1">
+                  <button 
+                    onClick={() => { router.push('/'); setShowProfile(false); }}
+                    className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-[#EF9F27] hover:bg-[#1C202B] hover:text-[#F9FAFB] rounded-lg transition-colors font-medium"
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>Go to Website Home</span>
+                  </button>
                   <button 
                     onClick={() => { router.push('/profile'); setShowProfile(false); }}
                     className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-[#9CA3AF] hover:bg-[#1C202B] hover:text-[#F9FAFB] rounded-lg transition-colors"

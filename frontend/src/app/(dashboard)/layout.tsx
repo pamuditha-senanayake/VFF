@@ -28,11 +28,17 @@ export default function DashboardLayout({
 }) {
   const [mounted, setMounted] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Close mobile drawer on route changes
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   if (!mounted) {
     return (
@@ -50,13 +56,27 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute>
-      <div className="flex min-h-screen bg-bg-subtle text-text-primary">
-        <Sidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
+      <div className="flex min-h-screen bg-bg-subtle text-text-primary overflow-x-hidden">
+        {/* Mobile sidebar overlay backdrop */}
+        {isMobileOpen && (
+          <div 
+            onClick={() => setIsMobileOpen(false)}
+            className="fixed inset-0 z-40 bg-[#0B0D12]/60 backdrop-blur-sm lg:hidden transition-all duration-300"
+          />
+        )}
+
+        <Sidebar 
+          isCollapsed={isCollapsed} 
+          onToggle={() => setIsCollapsed(!isCollapsed)} 
+          isMobileOpen={isMobileOpen}
+          onMobileClose={() => setIsMobileOpen(false)}
+        />
+        
         <div className={cn(
-          "flex-1 transition-all duration-300 min-h-screen flex flex-col",
-          isCollapsed ? "ml-20" : "ml-20 lg:ml-64"
+          "flex-1 transition-all duration-300 min-h-screen flex flex-col ml-0 lg:ml-64",
+          isCollapsed && "lg:ml-20"
         )}>
-          <Topbar title={title} />
+          <Topbar title={title} onMenuToggle={() => setIsMobileOpen(!isMobileOpen)} />
           <main className="flex-1 overflow-y-auto">
             <div className="p-4 md:p-8 max-w-[1400px] mx-auto space-y-8">
               {children}

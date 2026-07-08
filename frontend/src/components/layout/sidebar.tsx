@@ -13,7 +13,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  UserCheck
+  UserCheck,
+  Globe,
+  User,
+  Settings,
+  HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -23,6 +27,8 @@ import { useState } from 'react';
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 const sections = [
@@ -49,18 +55,28 @@ const sections = [
         ]
       },
     ]
+  },
+  {
+    title: 'PERSONAL',
+    items: [
+      { label: 'Go to Website Home', href: '/', icon: Globe, roles: ['Admin', 'Director', 'Finance Officer', 'HR Officer', 'Operations Lead', 'General Staff', 'System Administrator'] },
+      { label: 'Edit Profile', href: '/profile', icon: User, roles: ['Admin', 'Director', 'Finance Officer', 'HR Officer', 'Operations Lead', 'General Staff', 'System Administrator'] },
+      { label: 'Account Settings', href: '/settings', icon: Settings, roles: ['Admin', 'Director', 'Finance Officer', 'HR Officer', 'Operations Lead', 'General Staff', 'System Administrator'] },
+      { label: 'Support', href: '/support', icon: HelpCircle, roles: ['Admin', 'Director', 'Finance Officer', 'HR Officer', 'Operations Lead', 'General Staff', 'System Administrator'] },
+    ]
   }
 ];
 
-export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const [isAdminExpanded, setIsAdminExpanded] = useState(true);
 
   return (
     <aside className={cn(
-      "fixed left-0 top-0 h-screen bg-[#0B0D12] text-[#F9FAFB] transition-all duration-300 z-50 flex flex-col border-r border-[#232730]",
-      isCollapsed ? "w-20" : "w-64"
+      "fixed left-0 top-0 h-screen bg-[#0B0D12] text-[#F9FAFB] transition-all duration-300 z-50 flex flex-col border-r border-[#232730] w-64 lg:translate-x-0",
+      isCollapsed ? "lg:w-20" : "lg:w-64",
+      isMobileOpen ? "translate-x-0" : "-translate-x-full"
     )}>
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-between px-6 border-b border-[#232730]">
@@ -79,7 +95,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           variant="ghost" 
           size="icon" 
           onClick={onToggle}
-          className="text-[#9CA3AF] hover:text-[#F9FAFB]"
+          className="text-[#9CA3AF] hover:text-[#F9FAFB] hidden lg:flex"
         >
           {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </Button>

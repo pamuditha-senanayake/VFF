@@ -18,6 +18,7 @@ import { ShieldAlert, Trash2, Edit, Save, X, RefreshCw, Search, Filter } from 'l
 import ProtectedRoute from '@/components/layout/protected-route';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
+import Swal from 'sweetalert2';
 
 export default function AdminPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -58,14 +59,28 @@ export default function AdminPage() {
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
-    try {
-      await AuthService.deleteUser(userId);
-      toast.success('User deleted successfully');
-      fetchUsers();
-    } catch (err) {
-      toast.error('Failed to delete user');
-    }
+    Swal.fire({
+      title: 'Delete User?',
+      text: 'This will permanently delete the user account.',
+      icon: 'warning',
+      background: '#0F1520',
+      color: '#F9FAFB',
+      showCancelButton: true,
+      confirmButtonColor: '#DC2626',
+      cancelButtonColor: '#232730',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await AuthService.deleteUser(userId);
+          toast.success('User deleted successfully');
+          fetchUsers();
+        } catch (err) {
+          toast.error('Failed to delete user');
+        }
+      }
+    });
   };
 
   // Roles Definition
