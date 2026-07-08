@@ -88,26 +88,26 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-      <DialogContent className="bg-slate-900 border-slate-800 text-white sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Record Transaction</DialogTitle>
+      <DialogContent className="bg-surface border border-border-brand text-text-primary sm:max-w-md rounded-card shadow-card p-6">
+        <DialogHeader className="p-0 pb-4">
+          <DialogTitle className="text-lg font-bold font-heading text-text-primary">Record Transaction</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5 py-2">
+        <div className="space-y-4 py-2">
           {/* Transaction Type Toggle */}
           <div className="space-y-1.5">
-            <Label className="text-slate-400 text-xs uppercase tracking-wider">Type</Label>
+            <Label className="text-text-secondary text-xs uppercase tracking-wider font-semibold">Type</Label>
             <div className="grid grid-cols-2 gap-2">
               {(['Income', 'Expense'] as const).map((type) => (
                 <button
                   key={type}
                   onClick={() => setForm((f) => ({ ...f, transaction_type: type }))}
-                  className={`flex items-center justify-center gap-2 py-2.5 rounded-md border text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-center gap-2 py-2 rounded-lg border text-xs font-semibold transition-all ${
                     form.transaction_type === type
                       ? type === 'Income'
-                        ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400'
-                        : 'bg-rose-500/15 border-rose-500 text-rose-400'
-                      : 'border-slate-700 text-slate-400 hover:border-slate-500'
+                        ? 'bg-green-500/10 border-green-500/30 text-positive shadow-[0_0_8px_rgba(34,197,94,0.15)]'
+                        : 'bg-red-500/10 border-red-500/30 text-negative shadow-[0_0_8px_rgba(239,68,68,0.15)]'
+                      : 'border-border-brand text-text-secondary hover:border-accent/40 bg-bg-subtle'
                   }`}
                 >
                   {type === 'Income' ? (
@@ -123,9 +123,9 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
 
           {/* Amount */}
           <div className="space-y-1.5">
-            <Label className="text-slate-400 text-xs uppercase tracking-wider">Amount</Label>
+            <Label className="text-text-secondary text-xs uppercase tracking-wider font-semibold">Amount (LKR)</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-xs">Rs.</span>
               <Input
                 type="number"
                 min="0"
@@ -133,43 +133,43 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
                 placeholder="0.00"
                 value={form.amount}
                 onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                className="pl-7 bg-slate-800 border-slate-700 text-white placeholder:text-slate-600 focus:border-blue-500"
+                className="pl-9 bg-bg-subtle border border-border-brand text-text-primary placeholder:text-text-muted focus:border-accent text-xs rounded-lg h-10"
               />
             </div>
           </div>
 
           {/* Date */}
           <div className="space-y-1.5">
-            <Label className="text-slate-400 text-xs uppercase tracking-wider">Date</Label>
+            <Label className="text-text-secondary text-xs uppercase tracking-wider font-semibold">Date</Label>
             <Input
               type="date"
               value={form.transaction_date}
               onChange={(e) => setForm((f) => ({ ...f, transaction_date: e.target.value }))}
-              className="bg-slate-800 border-slate-700 text-white focus:border-blue-500"
+              className="bg-bg-subtle border border-border-brand text-text-primary focus:border-accent text-xs rounded-lg h-10"
             />
           </div>
 
           {/* Status */}
           <div className="space-y-1.5">
-            <Label className="text-slate-400 text-xs uppercase tracking-wider">Status</Label>
+            <Label className="text-text-secondary text-xs uppercase tracking-wider font-semibold">Status</Label>
             <Select
               value={form.status}
               onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'Cash' | 'Receivable' }))}
             >
-              <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:border-blue-500">
+              <SelectTrigger className="bg-bg-subtle border border-border-brand text-text-primary focus:border-accent text-xs rounded-lg h-10">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="Cash" className="text-white focus:bg-slate-700">Cash</SelectItem>
-                <SelectItem value="Receivable" className="text-white focus:bg-slate-700">Receivable</SelectItem>
+              <SelectContent className="bg-surface border border-border-brand text-text-primary rounded-lg">
+                <SelectItem value="Cash" className="text-text-primary focus:bg-bg-subtle focus:text-accent">Cash</SelectItem>
+                <SelectItem value="Receivable" className="text-text-primary focus:bg-bg-subtle focus:text-accent">Receivable</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Program (optional) */}
           <div className="space-y-1.5">
-            <Label className="text-slate-400 text-xs uppercase tracking-wider">
-              Program <span className="text-slate-600 normal-case">(optional)</span>
+            <Label className="text-text-secondary text-xs uppercase tracking-wider font-semibold">
+              Program <span className="text-text-muted normal-case font-normal">(optional)</span>
             </Label>
             <Select
               value={form.program_id?.toString() ?? 'none'}
@@ -180,13 +180,13 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
                 }))
               }
             >
-              <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:border-blue-500">
+              <SelectTrigger className="bg-bg-subtle border border-border-brand text-text-primary focus:border-accent text-xs rounded-lg h-10">
                 <SelectValue placeholder="No program" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="none" className="text-slate-400 focus:bg-slate-700">No program</SelectItem>
+              <SelectContent className="bg-surface border border-border-brand text-text-primary rounded-lg">
+                <SelectItem value="none" className="text-text-muted focus:bg-bg-subtle">No program</SelectItem>
                 {programs?.map((p) => (
-                  <SelectItem key={p.id} value={p.id.toString()} className="text-white focus:bg-slate-700">
+                  <SelectItem key={p.id} value={p.id.toString()} className="text-text-primary focus:bg-bg-subtle focus:text-accent">
                     {p.program_name}
                   </SelectItem>
                 ))}
@@ -196,24 +196,24 @@ export function NewTransactionModal({ open, onClose }: NewTransactionModalProps)
 
           {/* Error */}
           {error && (
-            <p className="text-rose-400 text-sm bg-rose-400/10 border border-rose-400/20 rounded-md px-3 py-2">
+            <p className="text-negative text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
               {error}
             </p>
           )}
         </div>
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 pt-4">
           <Button
             variant="outline"
             onClick={handleClose}
-            className="border-slate-700 text-slate-300 hover:bg-slate-800"
+            className="border-border-brand text-text-primary hover:bg-bg-subtle text-xs rounded-lg h-10"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isPending}
-            className="bg-blue-600 hover:bg-blue-700 min-w-[120px]"
+            className="bg-accent hover:bg-accent/80 text-white font-semibold text-xs rounded-lg h-10 min-w-[120px] shadow-sm"
           >
             {isPending ? (
               <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>

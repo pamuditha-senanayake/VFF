@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-body"
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading"
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono"
+});
 
 export const metadata: Metadata = {
   title: "VFF IMS | Integrated Management System",
@@ -18,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-slate-950 text-slate-100 antialiased`}>
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-bg-brand text-text-primary antialiased`}>
         <QueryProvider>
           {children}
         </QueryProvider>

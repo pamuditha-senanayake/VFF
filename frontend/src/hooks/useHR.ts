@@ -47,3 +47,18 @@ export function useRunPayroll() {
     },
   });
 }
+
+export function useCreateEmployee() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: HRService.createEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      toast.success('Employee record created successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to add employee');
+    }
+  });
+}

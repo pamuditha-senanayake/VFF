@@ -26,3 +26,14 @@ export function useCreateInventoryTransaction() {
     }
   });
 }
+
+export function useCreateInventoryItem() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: InventoryService.createItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+    }
+  });
+}
