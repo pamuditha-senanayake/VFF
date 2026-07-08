@@ -17,6 +17,7 @@ import { Package, ArrowUpRight, ArrowDownLeft, Filter, Plus } from 'lucide-react
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
+import { useThemeStore } from '@/store/useThemeStore';
 import { useQuery } from '@tanstack/react-query';
 import { FinanceService } from '@/services/finance.service';
 
@@ -34,31 +35,34 @@ export default function InventoryPage() {
   });
 
   const handleAddItem = () => {
+    const isDark = useThemeStore.getState().theme === 'dark';
+    const inputStyle = `width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: ${isDark ? '#14161C' : '#FFFFFF'}; color: ${isDark ? '#F9FAFB' : '#111318'}; border: 1px solid ${isDark ? '#232730' : '#E5E7EB'}; border-radius: 8px; padding: 0 10px;`;
+    
     Swal.fire({
       title: 'Add Inventory Item',
       html: `
         <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; font-family: sans-serif;">
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">ITEM NAME</label>
-            <input id="swal-iname" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="e.g. Rabies Vaccine Vials">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">ITEM NAME</label>
+            <input id="swal-iname" style="${inputStyle}" placeholder="e.g. Rabies Vaccine Vials">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">INITIAL STOCK</label>
-            <input id="swal-istock" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="100">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">INITIAL STOCK</label>
+            <input id="swal-istock" type="number" style="${inputStyle}" placeholder="100">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">UNIT COST (LKR)</label>
-            <input id="swal-icost" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="1500">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">UNIT COST (LKR)</label>
+            <input id="swal-icost" type="number" style="${inputStyle}" placeholder="1500">
           </div>
         </div>
       `,
-      background: '#0F1520',
-      color: '#F9FAFB',
+      background: isDark ? '#0F1520' : '#FFFFFF',
+      color: isDark ? '#F9FAFB' : '#111318',
       showCancelButton: true,
       confirmButtonText: 'Add Item',
       confirmButtonColor: '#EF9F27',
       cancelButtonText: 'Cancel',
-      cancelButtonColor: '#232730',
+      cancelButtonColor: isDark ? '#232730' : '#E5E7EB',
       preConfirm: () => {
         const name = (document.getElementById('swal-iname') as HTMLInputElement).value.trim();
         const stock = (document.getElementById('swal-istock') as HTMLInputElement).value.trim();
@@ -98,6 +102,9 @@ export default function InventoryPage() {
       return;
     }
 
+    const isDark = useThemeStore.getState().theme === 'dark';
+    const inputStyle = `width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: ${isDark ? '#14161C' : '#FFFFFF'}; color: ${isDark ? '#F9FAFB' : '#111318'}; border: 1px solid ${isDark ? '#232730' : '#E5E7EB'}; border-radius: 8px; padding: 0 10px;`;
+
     const itemsOptions = items.map(item => `<option value="${item.id}">${item.item_name} (Current: ${item.current_stock})</option>`).join('');
     const programsOptions = (programs || []).map(p => `<option value="${p.id}">${p.program_name}</option>`).join('');
 
@@ -106,38 +113,38 @@ export default function InventoryPage() {
       html: `
         <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; font-family: sans-serif;">
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">SELECT ITEM</label>
-            <select id="swal-txitem" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">SELECT ITEM</label>
+            <select id="swal-txitem" style="${inputStyle}">
               ${itemsOptions}
             </select>
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">TRANSACTION TYPE</label>
-            <select id="swal-txtype" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">TRANSACTION TYPE</label>
+            <select id="swal-txtype" style="${inputStyle}">
               <option value="Issue">Issue (Decrement)</option>
               <option value="Return">Return (Increment)</option>
             </select>
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">QUANTITY</label>
-            <input id="swal-txqty" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="10">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">QUANTITY</label>
+            <input id="swal-txqty" type="number" style="${inputStyle}" placeholder="10">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">PROGRAM / PROJECT</label>
-            <select id="swal-txprogram" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">PROGRAM / PROJECT</label>
+            <select id="swal-txprogram" style="${inputStyle}">
               <option value="none">Stock Adjustment (No Program)</option>
               ${programsOptions}
             </select>
           </div>
         </div>
       `,
-      background: '#0F1520',
-      color: '#F9FAFB',
+      background: isDark ? '#0F1520' : '#FFFFFF',
+      color: isDark ? '#F9FAFB' : '#111318',
       showCancelButton: true,
       confirmButtonText: 'Record Log',
       confirmButtonColor: '#EF9F27',
       cancelButtonText: 'Cancel',
-      cancelButtonColor: '#232730',
+      cancelButtonColor: isDark ? '#232730' : '#E5E7EB',
       preConfirm: () => {
         const itemIdStr = (document.getElementById('swal-txitem') as HTMLSelectElement).value;
         const txType = (document.getElementById('swal-txtype') as HTMLSelectElement).value;

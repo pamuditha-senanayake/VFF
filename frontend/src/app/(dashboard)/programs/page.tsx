@@ -24,6 +24,7 @@ import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
+import { useThemeStore } from '@/store/useThemeStore';
 
 const MOCK_PROGRAMS = [
   { id: 101, program_name: 'Regional Vaccination Alpha', status: 'Active', total_animals_treated: 1240 },
@@ -93,38 +94,41 @@ export default function ProgramsPage() {
   };
 
   const handleInitializeProgram = () => {
+    const isDark = useThemeStore.getState().theme === 'dark';
+    const inputStyle = `width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: ${isDark ? '#14161C' : '#FFFFFF'}; color: ${isDark ? '#F9FAFB' : '#111318'}; border: 1px solid ${isDark ? '#232730' : '#E5E7EB'}; border-radius: 8px; padding: 0 10px;`;
+    
     Swal.fire({
       title: 'Initialize New Program',
       html: `
         <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; font-family: sans-serif;">
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">PROGRAM NAME</label>
-            <input id="swal-pname" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="Program name">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">PROGRAM NAME</label>
+            <input id="swal-pname" style="${inputStyle}" placeholder="Program name">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">BUDGET (LKR)</label>
-            <input id="swal-budget" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="250000">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">BUDGET (LKR)</label>
+            <input id="swal-budget" type="number" style="${inputStyle}" placeholder="250000">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">INITIAL ANIMALS TREATED</label>
-            <input id="swal-treated" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="0">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">INITIAL ANIMALS TREATED</label>
+            <input id="swal-treated" type="number" style="${inputStyle}" placeholder="0">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">STATUS</label>
-            <select id="swal-status" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">STATUS</label>
+            <select id="swal-status" style="${inputStyle}">
               <option value="Active">Active</option>
               <option value="In Progress">In Progress</option>
             </select>
           </div>
         </div>
       `,
-      background: '#0F1520',
-      color: '#F9FAFB',
+      background: isDark ? '#0F1520' : '#FFFFFF',
+      color: isDark ? '#F9FAFB' : '#111318',
       showCancelButton: true,
       confirmButtonText: 'Initialize',
       confirmButtonColor: '#EF9F27',
       cancelButtonText: 'Cancel',
-      cancelButtonColor: '#232730',
+      cancelButtonColor: isDark ? '#232730' : '#E5E7EB',
       preConfirm: () => {
         const name = (document.getElementById('swal-pname') as HTMLInputElement).value.trim();
         const budget = (document.getElementById('swal-budget') as HTMLInputElement).value.trim();

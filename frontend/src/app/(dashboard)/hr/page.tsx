@@ -21,6 +21,7 @@ import ProtectedRoute from '@/components/layout/protected-route';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
+import { useThemeStore } from '@/store/useThemeStore';
 
 export default function HRPage() {
   const [activeTab, setActiveTab] = useState('employees');
@@ -55,35 +56,38 @@ export default function HRPage() {
   }, [activeTab]);
 
   const handleAddEmployee = () => {
+    const isDark = useThemeStore.getState().theme === 'dark';
+    const inputStyle = `width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: ${isDark ? '#14161C' : '#FFFFFF'}; color: ${isDark ? '#F9FAFB' : '#111318'}; border: 1px solid ${isDark ? '#232730' : '#E5E7EB'}; border-radius: 8px; padding: 0 10px;`;
+    
     Swal.fire({
       title: 'Add New Employee',
       html: `
         <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; font-family: sans-serif;">
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">FIRST NAME</label>
-            <input id="swal-fn" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="First name">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">FIRST NAME</label>
+            <input id="swal-fn" style="${inputStyle}" placeholder="First name">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">LAST NAME</label>
-            <input id="swal-ln" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="Last name">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">LAST NAME</label>
+            <input id="swal-ln" style="${inputStyle}" placeholder="Last name">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">NIC NUMBER</label>
-            <input id="swal-nic" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="e.g. 199512345678 or 951234567V">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">NIC NUMBER</label>
+            <input id="swal-nic" style="${inputStyle}" placeholder="e.g. 199512345678 or 951234567V">
           </div>
           <div>
-            <label style="font-size: 10px; font-weight: bold; color: #9CA3AF; uppercase; tracking-wider;">BASE SALARY (LKR)</label>
-            <input id="swal-salary" type="number" style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 12px; height: 38px; background: #14161C; color: #F9FAFB; border: 1px solid #232730; border-radius: 8px; padding: 0 10px;" placeholder="50000">
+            <label style="font-size: 10px; font-weight: bold; color: ${isDark ? '#9CA3AF' : '#6B7280'}; uppercase; tracking-wider;">BASE SALARY (LKR)</label>
+            <input id="swal-salary" type="number" style="${inputStyle}" placeholder="50000">
           </div>
         </div>
       `,
-      background: '#0F1520',
-      color: '#F9FAFB',
+      background: isDark ? '#0F1520' : '#FFFFFF',
+      color: isDark ? '#F9FAFB' : '#111318',
       showCancelButton: true,
       confirmButtonText: 'Create Record',
       confirmButtonColor: '#EF9F27',
       cancelButtonText: 'Cancel',
-      cancelButtonColor: '#232730',
+      cancelButtonColor: isDark ? '#232730' : '#E5E7EB',
       preConfirm: () => {
         const fn = (document.getElementById('swal-fn') as HTMLInputElement).value.trim();
         const ln = (document.getElementById('swal-ln') as HTMLInputElement).value.trim();

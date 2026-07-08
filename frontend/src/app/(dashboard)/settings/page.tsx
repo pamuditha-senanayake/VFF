@@ -21,6 +21,7 @@ import {
   Settings
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useThemeStore } from '@/store/useThemeStore';
 
 interface IMSNotification {
   id: number;
@@ -40,7 +41,7 @@ const INITIAL_NOTIFICATIONS: IMSNotification[] = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('notifications');
-  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const { theme, toggleTheme } = useThemeStore();
   
   // Module notification toggles
   const [moduleToggles, setModuleToggles] = useState({
@@ -52,22 +53,6 @@ export default function SettingsPage() {
 
   // Notifications feed state
   const [notifications, setNotifications] = useState<IMSNotification[]>(INITIAL_NOTIFICATIONS);
-
-  // Apply actual theme class to DOM when it changes
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (themeMode === 'light') {
-      root.classList.add('light-theme');
-      root.style.setProperty('--background', '#F9FAFB');
-      root.style.setProperty('--foreground', '#111827');
-      toast.info('Light theme preference loaded');
-    } else {
-      root.classList.remove('light-theme');
-      root.style.removeProperty('--background');
-      root.style.removeProperty('--foreground');
-      toast.info('Dark theme preference loaded');
-    }
-  }, [themeMode]);
 
   // Handle module toggle switches
   const handleToggle = (module: 'finance' | 'hr' | 'inventory' | 'programs') => {
@@ -251,13 +236,13 @@ export default function SettingsPage() {
                   <p className="text-xs text-text-secondary">Toggle between high-contrast dark theme and light theme options.</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Sun className={`h-4 w-4 ${themeMode === 'light' ? 'text-accent' : 'text-text-secondary'}`} />
+                  <Sun className={`h-4 w-4 ${theme === 'light' ? 'text-[#EF9F27]' : 'text-text-secondary'}`} />
                   <Switch 
-                    checked={themeMode === 'dark'} 
-                    onCheckedChange={(checked) => setThemeMode(checked ? 'dark' : 'light')}
+                    checked={theme === 'dark'} 
+                    onCheckedChange={toggleTheme}
                     className="data-[state=checked]:bg-[#EF9F27]"
                   />
-                  <Moon className={`h-4 w-4 ${themeMode === 'dark' ? 'text-accent' : 'text-text-secondary'}`} />
+                  <Moon className={`h-4 w-4 ${theme === 'dark' ? 'text-[#EF9F27]' : 'text-text-secondary'}`} />
                 </div>
               </div>
 

@@ -74,12 +74,12 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
 
   return (
     <aside className={cn(
-      "fixed left-0 top-0 h-screen bg-[#0B0D12] text-[#F9FAFB] transition-all duration-300 z-50 flex flex-col border-r border-[#232730] w-64 lg:translate-x-0",
+      "fixed left-0 top-0 h-screen bg-bg-brand text-text-primary transition-all duration-300 z-50 flex flex-col border-r border-border-brand w-64 lg:translate-x-0",
       isCollapsed ? "lg:w-20" : "lg:w-64",
       isMobileOpen ? "translate-x-0" : "-translate-x-full"
     )}>
       {/* Logo Section */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-[#232730]">
+      <div className="h-16 flex items-center justify-between px-6 border-b border-border-brand">
         {!isCollapsed ? (
           <Link href="/" className="cursor-pointer">
             <span className="text-xl font-bold font-heading bg-gradient-to-r from-amber-400 to-[#EF9F27] bg-clip-text text-transparent hover:opacity-90">
@@ -95,7 +95,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
           variant="ghost" 
           size="icon" 
           onClick={onToggle}
-          className="text-[#9CA3AF] hover:text-[#F9FAFB] hidden lg:flex"
+          className="text-text-secondary hover:text-text-primary hidden lg:flex"
         >
           {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </Button>
@@ -113,7 +113,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
           return (
             <div key={section.title} className="space-y-2">
               {!isCollapsed && (
-                <div className="px-3 text-[10px] font-bold tracking-wider text-[#6B7280]">
+                <div className="px-3 text-[10px] font-bold tracking-wider text-text-secondary">
                   {section.title}
                 </div>
               )}
@@ -129,12 +129,12 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                         <div 
                           onClick={() => setIsAdminExpanded(!isAdminExpanded)}
                           className={cn(
-                            "flex items-center justify-between py-2.5 rounded-lg cursor-pointer transition-colors pl-3 pr-2 text-[#9CA3AF] hover:bg-[#14161C] hover:text-[#F9FAFB]",
+                            "flex items-center justify-between py-2.5 rounded-lg cursor-pointer transition-colors pl-3 pr-2 text-text-secondary hover:bg-bg-subtle hover:text-text-primary",
                             isActive && "bg-amber-500/5 text-[#EF9F27]"
                           )}
                         >
                           <div className="flex items-center gap-3">
-                            <Icon size={20} className={isActive ? "text-[#EF9F27]" : "text-[#9CA3AF]"} />
+                            <Icon size={20} className={isActive ? "text-[#EF9F27]" : "text-text-secondary"} />
                             <span className="text-sm font-medium">{item.label}</span>
                           </div>
                           <ChevronDown size={16} className={cn("transition-transform", isAdminExpanded && "rotate-180")} />
@@ -149,7 +149,7 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                                 "flex items-center gap-3 py-2 rounded-lg cursor-pointer transition-colors pl-8 pr-2 mt-0.5",
                                 isSubActive 
                                   ? "bg-amber-500/10 text-[#EF9F27] border-l-2 border-[#EF9F27] rounded-l-none pl-7" 
-                                  : "hover:bg-[#14161C] text-[#9CA3AF] hover:text-[#F9FAFB]"
+                                  : "hover:bg-bg-subtle text-text-secondary hover:text-text-primary"
                               )}>
                                 <SubIcon size={16} />
                                 <span className="text-xs font-semibold">{sub.label}</span>
@@ -167,11 +167,11 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
                         "flex items-center gap-3 py-2.5 rounded-lg transition-colors group cursor-pointer",
                         isActive 
                           ? "bg-amber-500/10 text-[#EF9F27] border-l-4 border-[#EF9F27] rounded-l-none pl-2" 
-                          : "hover:bg-[#14161C] text-[#9CA3AF] hover:text-[#F9FAFB] pl-3"
+                          : "hover:bg-bg-subtle text-text-secondary hover:text-text-primary pl-3"
                       )}>
                         <Icon size={20} className={cn(
                           "shrink-0",
-                          isActive ? "text-[#EF9F27]" : "text-[#9CA3AF] group-hover:text-[#F9FAFB]"
+                          isActive ? "text-[#EF9F27]" : "text-text-secondary group-hover:text-text-primary"
                         )} />
                         {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
                       </div>
@@ -185,18 +185,18 @@ export function Sidebar({ isCollapsed, onToggle, isMobileOpen }: SidebarProps) {
       </nav>
 
       {/* Footer / User Profile */}
-      <div className="p-4 border-t border-[#232730]">
+      <div className="p-4 border-t border-border-brand">
         {!isCollapsed && user && (
           <div className="mb-4 px-2">
-            <p className="text-sm font-semibold truncate text-[#F9FAFB]">{user.name}</p>
-            <p className="text-xs text-[#6B7280] capitalize mt-0.5">{user.role}</p>
+            <p className="text-sm font-semibold truncate text-text-primary">{user.name}</p>
+            <p className="text-xs text-text-secondary capitalize mt-0.5">{user.role}</p>
           </div>
         )}
         <Button 
           onClick={logout}
           variant="ghost"
           className={cn(
-            "w-full flex items-center gap-3 justify-start text-[#9CA3AF] hover:text-[#DC2626] hover:bg-rose-500/10 transition-all",
+            "w-full flex items-center gap-3 justify-start text-text-secondary hover:text-[#DC2626] hover:bg-rose-500/10 transition-all",
             isCollapsed && "px-0 justify-center"
           )}
         >

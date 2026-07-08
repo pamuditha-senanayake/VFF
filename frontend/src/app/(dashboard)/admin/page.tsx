@@ -19,6 +19,7 @@ import ProtectedRoute from '@/components/layout/protected-route';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
+import { useThemeStore } from '@/store/useThemeStore';
 
 export default function AdminPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -59,15 +60,16 @@ export default function AdminPage() {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    const isDark = useThemeStore.getState().theme === 'dark';
     Swal.fire({
       title: 'Delete User?',
       text: 'This will permanently delete the user account.',
       icon: 'warning',
-      background: '#0F1520',
-      color: '#F9FAFB',
+      background: isDark ? '#0F1520' : '#FFFFFF',
+      color: isDark ? '#F9FAFB' : '#111318',
       showCancelButton: true,
       confirmButtonColor: '#DC2626',
-      cancelButtonColor: '#232730',
+      cancelButtonColor: isDark ? '#232730' : '#E5E7EB',
       confirmButtonText: 'Yes, Delete',
       cancelButtonText: 'Cancel'
     }).then(async (result) => {

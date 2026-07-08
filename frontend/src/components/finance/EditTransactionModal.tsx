@@ -51,7 +51,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
         transaction_date: transaction.transaction_date,
         amount: transaction.amount.toString(),
         transaction_type: transaction.transaction_type,
-        status: transaction.status === 'Void' ? 'Cash' : transaction.status as 'Cash' | 'Receivable',
+        status: transaction.status === 'Voided' ? 'Cash' : transaction.status as 'Cash' | 'Receivable',
         program_id: transaction.program_id,
       });
       setError(null);
