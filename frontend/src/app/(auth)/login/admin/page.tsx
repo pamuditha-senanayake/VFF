@@ -54,40 +54,33 @@ export default function AdminLoginPage() {
           }}
           id="visual-pane"
         >
-          <div className="absolute inset-0 bg-gradient-to-b dark:from-[#0B0D12]/60 dark:to-[#0B0D12]/95 light:from-white/40 light:to-white/90 via-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/90 via-transparent pointer-events-none" />
           
           {/* Top Row: Logo & Back Button */}
           <div className="relative flex justify-between items-center z-10">
-            <span className="text-lg font-extrabold tracking-wider text-text-primary dark:text-white font-heading">
+            <span className="text-lg font-extrabold tracking-wider text-white font-heading">
               VFF IMS
             </span>
             <Link 
               href="/"
-              className="text-[11px] font-bold text-text-secondary hover:text-text-primary bg-bg-subtle/85 py-2 px-4 rounded-lg flex items-center gap-1 border border-border-brand backdrop-blur-md hover:bg-bg-brand transition-all duration-150"
+              className="text-[11px] font-bold text-white/90 hover:text-white bg-black/45 py-2 px-4 rounded-lg flex items-center gap-1 border border-white/10 backdrop-blur-md hover:bg-black/60 transition-all duration-150"
             >
               Back to website →
             </Link>
           </div>
 
-          {/* Bottom Row: Main Caption & Slide Indicators */}
+          {/* Bottom Row: Main Caption */}
           <div className="relative z-10 space-y-6">
-            <h1 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tight text-text-primary dark:text-white font-heading">
+            <h1 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tight text-white font-heading">
               System administration, <br />
               securing access.
             </h1>
-            
-            {/* Indicators */}
-            <div className="flex gap-2 items-center">
-              <span className="h-0.5 w-8 bg-[#EF9F27] rounded-full transition-all duration-200" />
-              <span className="h-0.5 w-8 bg-white/20 rounded-full transition-all duration-200" />
-              <span className="h-0.5 w-8 bg-white/20 rounded-full transition-all duration-200" />
-            </div>
           </div>
         </div>
       </div>
 
       {/* Right Pane - Form directly on Background */}
-      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative bg-bg-brand">
+      <div className="flex items-center justify-center p-6 md:p-12 lg:p-20 relative light:bg-[#F8F9FA] bg-bg-brand">
         <div className="w-full max-w-md flex flex-col gap-8">
           
           {/* Header */}
