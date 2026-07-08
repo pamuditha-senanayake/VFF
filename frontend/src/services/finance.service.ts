@@ -22,22 +22,22 @@ export const FinanceService = {
     return response.data;
   },
 
+  updateTransaction: async (id: number, transaction: Omit<Transaction, 'id' | 'programs'>) => {
+  const response = await api.put<Transaction>(`/finance/transactions/${id}`, transaction);
+  return response.data;
+},
+
+voidTransaction: async (id: number) => {
+  const response = await api.patch<Transaction>(`/finance/transactions/${id}/void`);
+  return response.data;
+},
+
   getSummary: async () => {
-    const transactions = await FinanceService.getTransactions();
-    const cash_available = transactions
-      .filter(t => t.status === 'Cash')
-      .reduce((acc, t) => acc + (t.transaction_type === 'Income' ? t.amount : -t.amount), 0);
-    const receivables = transactions
-      .filter(t => t.status === 'Receivable')
-      .reduce((acc, t) => acc + t.amount, 0);
-    const monthly_expenses = transactions
-      .filter(t => t.transaction_type === 'Expense')
-      .reduce((acc, t) => acc + t.amount, 0);
-      
-    return {
-      cash_available,
-      receivables,
-      monthly_expenses
-    };
+    const response = await api.get<{
+      cash_available: number;
+      receivables: number;
+      monthly_expenses: number;
+    }>('/finance/summary');
+    return response.data;
   }
 };

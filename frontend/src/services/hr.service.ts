@@ -31,5 +31,10 @@ export const HRService = {
   lockAttendance: async (date: string) => {
     const response = await api.post(`/hr/attendance/lock`, null, { params: { target_date: date } });
     return response.data;
+  },
+
+  generatePayroll: async (month: number, year: number) => {
+    const response = await api.post(`/hr/payroll/generate`, null, { params: { month, year } });
+    return response.data;
   }
 };

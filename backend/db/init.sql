@@ -95,5 +95,56 @@ CREATE TABLE IF NOT EXISTS system_audit_logs (
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- ============================================
+-- 11. FUNCTIONS
+-- ============================================
+
+-- Atomic monthly payroll generation.
+-- Wraps duplicate-check, payroll insert, and the linked
+-- financial_transactions expense entry in one transaction
+-- so partial failures can't leave payroll and finance out of sync.
+CREATE OR REPLACE FUNCTION generate_monthly_payroll(p_month INT, p_year INT)
+RETURNS SETOF payroll_ledger
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  v_total NUMERIC(12,2) := 0;
+  v_count INT;
+BEGIN
+  -- Lock any existing rows for this month/year to block concurrent duplicate runs
+  PERFORM 1 FROM payroll_ledger
+    WHERE payroll_month = p_month AND payroll_year = p_year
+    FOR UPDATE;
+
+  IF EXISTS (
+    SELECT 1 FROM payroll_ledger
+    WHERE payroll_month = p_month AND payroll_year = p_year
+  ) THEN
+    RAISE EXCEPTION 'Payroll for %/% has already been processed.', p_month, p_year;
+  END IF;
+
+  SELECT COUNT(*) INTO v_count FROM employee_profile WHERE status = 'Active';
+  IF v_count = 0 THEN
+    RAISE EXCEPTION 'No active employees found.';
+  END IF;
+
+  INSERT INTO payroll_ledger (employee_id, payroll_month, payroll_year, net_payable)
+  SELECT id, p_month, p_year, base_salary
+  FROM employee_profile
+  WHERE status = 'Active';
+
+  SELECT SUM(base_salary) INTO v_total
+  FROM employee_profile
+  WHERE status = 'Active';
+
+  INSERT INTO financial_transactions (transaction_date, amount, transaction_type, status)
+  VALUES (CURRENT_DATE, v_total, 'Expense', 'Cash');
+
+  RETURN QUERY
+    SELECT * FROM payroll_ledger
+    WHERE payroll_month = p_month AND payroll_year = p_year;
+END;
+$$;
+
 -- Enable RLS (Optional, can be managed via Supabase UI)
 -- ALTER TABLE users ENABLE ROW LEVEL SECURITY;

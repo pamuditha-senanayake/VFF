@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useEmployees, useAttendance, useLockAttendance } from '@/hooks/useHR';
+import { useEmployees, useAttendance, useLockAttendance, useRunPayroll } from '@/hooks/useHR';
 import { 
   Table, 
   TableBody, 
@@ -21,6 +21,7 @@ import ProtectedRoute from '@/components/layout/protected-route';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
 
+
 export default function HRPage() {
   const [activeTab, setActiveTab] = useState('employees');
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -30,6 +31,7 @@ export default function HRPage() {
   const { data: employees, isLoading: loadingEmployees } = useEmployees();
   const { data: attendance, isLoading: loadingAttendance } = useAttendance(selectedDate);
   const lockAttendance = useLockAttendance();
+  const runPayroll = useRunPayroll();
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
@@ -208,7 +210,16 @@ export default function HRPage() {
                </div>
                <h3 className="text-xl font-bold mb-2">Automated Payroll Generation</h3>
                <p className="text-slate-400 mb-6">Aggregate attendance logs to calculate monthly disbursements. Requires all days to be locked.</p>
-               <Button className="bg-blue-600">Run Calculation</Button>
+               <Button
+                  className="bg-blue-600 hover:bg-blue-700"
+                  disabled={runPayroll.isPending}
+                  onClick={() => {
+                    const now = new Date();
+                    runPayroll.mutate({ month: now.getMonth() + 1, year: now.getFullYear() });
+                }}
+                    >
+              {runPayroll.isPending ? 'Generating...' : 'Run Calculation'}
+                </Button>
              </div>
           </div>
         </TabsContent>
