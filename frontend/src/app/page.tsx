@@ -99,7 +99,7 @@ export default function Homepage() {
                 {isAuthenticated ? (
                   <Link href="/dashboard">
                     {/* Task 8: Prominent Dashboard highlight button with glow & hover animations */}
-                    <Button className="bg-[#EF9F27] hover:bg-[#EF9F27]/90 text-white font-bold text-xs py-3 px-6 rounded-lg shadow-[0_0_15px_rgba(239,159,39,0.4)] hover:shadow-[0_0_25px_rgba(239,159,39,0.7)] transition-all hover:scale-105 duration-300 border-none animate-pulse">
+                    <Button className="bg-[#EF9F27] hover:bg-[#EF9F27]/80 text-[#0B0D12] font-semibold text-xs tracking-wider py-3.5 px-7 rounded-lg shadow-md hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-200 border-none">
                       Go to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
