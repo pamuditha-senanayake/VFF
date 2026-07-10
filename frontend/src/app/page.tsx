@@ -1,11 +1,12 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useThemeStore } from '@/store/useThemeStore';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MapPin, Mail, Phone, Clock, Activity, ShieldCheck, Heart, Bell, User, Settings, HelpCircle, LogOut, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +17,7 @@ export default function Homepage() {
   const { theme, toggleTheme } = useThemeStore();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  
+
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -48,10 +49,8 @@ export default function Homepage() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // Scrolling down - hide navbar
         setNavVisible(false);
       } else {
-        // Scrolling up - show navbar
         setNavVisible(true);
       }
       setLastScrollY(currentScrollY);
@@ -63,7 +62,7 @@ export default function Homepage() {
 
   // Scroll Reveal Animations using IntersectionObserver
   const [revealedSections, setRevealedSections] = useState<Record<string, boolean>>({});
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -79,6 +78,33 @@ export default function Homepage() {
     return () => targets.forEach((target) => observer.unobserve(target));
   }, []);
 
+  const heroSlides = [
+    {
+      image: '/images/galle-project.jpg',
+      title: 'GALLE STERILIZATION PROJECT',
+      subtitle: "VETS FOR FUTURE — SRI LANKA'S LARGEST STERILIZATION INITIATIVE",
+    },
+    {
+      image: '/images/sigiriya-project.jpg',
+      title: 'SIGIRIYA ANCIENT CITY PROJECT',
+      subtitle: 'VETS FOR FUTURE — TOURIST & COMMUNITY SAFETY PROGRAM',
+    },
+    {
+      image: '/images/anuradhapura-project.jpg',
+      title: 'ANURADHAPURA PROJECT',
+      subtitle: 'VETS FOR FUTURE — 5-YEAR TEMPLE AREA STERILIZATION PROGRAM',
+    },
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
+
   return (
     <div className="min-h-screen bg-bg-brand text-text-primary font-sans selection:bg-[#EF9F27]/30 overflow-x-hidden flex flex-col justify-between">
 
@@ -87,8 +113,11 @@ export default function Homepage() {
         navVisible ? 'translate-y-0' : '-translate-y-full'
       }`}>
         <div className="max-w-[1280px] mx-auto px-6 md:px-12 h-16 flex justify-between items-center">
-          <Link href="/" className="text-sm font-extrabold tracking-wider uppercase text-text-primary hover:text-[#EF9F27] transition-colors">
-            VFF IMS
+          <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+            <Image src="/vff-logo.png" alt="Vets For Future" width={36} height={36} className="h-9 w-9 object-contain" />
+            <span className="text-sm font-extrabold tracking-wider uppercase text-text-primary">
+              VFF IMS
+            </span>
           </Link>
           <nav className="flex items-center gap-6 text-xs font-semibold text-text-secondary">
             <Link href="/" className="hover:text-text-primary transition-colors duration-150">Home</Link>
@@ -100,7 +129,7 @@ export default function Homepage() {
 
                 {/* Notification Bell */}
                 <div className="relative" ref={notifRef}>
-                  <button 
+                  <button
                     onClick={() => setShowNotifications(!showNotifications)}
                     className="relative p-1.5 text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-subtle transition-colors flex items-center"
                   >
@@ -132,7 +161,7 @@ export default function Homepage() {
 
                 {/* User Profile Avatar Dropdown */}
                 <div className="relative" ref={profileRef}>
-                  <button 
+                  <button
                     onClick={() => setShowProfile(!showProfile)}
                     className="flex items-center gap-2 p-1 text-text-secondary hover:text-text-primary rounded-full hover:bg-bg-subtle transition-all"
                   >
@@ -148,21 +177,21 @@ export default function Homepage() {
                         <p className="text-[10px] text-text-secondary truncate mt-0.5 font-mono">{user?.email || 'user@example.com'}</p>
                       </div>
                       <div className="p-1">
-                        <button 
+                        <button
                           onClick={() => { router.push('/profile'); setShowProfile(false); }}
                           className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-bg-subtle hover:text-text-primary rounded-lg transition-colors font-medium"
                         >
                           <User className="w-3.5 h-3.5" />
                           <span>Edit profile</span>
                         </button>
-                        <button 
+                        <button
                           onClick={() => { router.push('/settings'); setShowProfile(false); }}
                           className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-bg-subtle hover:text-text-primary rounded-lg transition-colors font-medium"
                         >
                           <Settings className="w-3.5 h-3.5" />
                           <span>Account settings</span>
                         </button>
-                        <button 
+                        <button
                           onClick={() => { router.push('/support'); setShowProfile(false); }}
                           className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-bg-subtle hover:text-text-primary rounded-lg transition-colors font-medium"
                         >
@@ -170,7 +199,7 @@ export default function Homepage() {
                           <span>Support</span>
                         </button>
                         {/* Theme Mode Toggle Dropdown item */}
-                        <button 
+                        <button
                           onClick={() => { toggleTheme(); setShowProfile(false); }}
                           className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-bg-subtle hover:text-text-primary rounded-lg transition-colors font-medium"
                         >
@@ -188,7 +217,7 @@ export default function Homepage() {
                         </button>
                       </div>
                       <div className="p-1 border-t border-border-brand bg-bg-subtle/20">
-                        <button 
+                        <button
                           onClick={() => { logout(); setShowProfile(false); }}
                           className="flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs text-[#DC2626] hover:bg-rose-500/10 rounded-lg transition-colors font-semibold"
                         >
@@ -253,20 +282,44 @@ export default function Homepage() {
               </div>
             </div>
 
-            {/* Image column */}
+            {/* Image column — auto-rotating carousel of real field project photos */}
             <div className="relative w-full h-[280px] md:h-[380px] rounded-2xl overflow-hidden border border-border-brand shadow-2xl bg-surface group">
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1600&q=80')" }}
-              />
+              {heroSlides.map((slide, index) => (
+                <div
+                  key={slide.image}
+                  className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 group-hover:scale-105 ${
+                    index === activeSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ backgroundImage: `url('${slide.image}')` }}
+                />
+              ))}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:via-[#0B0D12]/20 dark:to-[#0B0D12]/90 light:via-white/20 light:to-white/95" />
+
+              <div className="absolute top-6 right-6 text-[10px] font-semibold text-text-primary dark:text-[#F9FAFB] font-mono bg-surface/60 backdrop-blur-md py-1.5 px-3 rounded-full border border-border-brand/40">
+                {String(activeSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
+              </div>
+
               <div className="absolute bottom-6 left-6 right-6 space-y-1">
                 <p className="text-[10px] tracking-wider text-text-primary dark:text-[#F9FAFB] font-bold uppercase">
-                  VFF Central Clinic Care
+                  {heroSlides[activeSlide].title}
                 </p>
                 <p className="text-[9px] tracking-wider text-[#9CA3AF] font-medium uppercase">
-                  Vets For Future — Public Division
+                  {heroSlides[activeSlide].subtitle}
                 </p>
+              </div>
+
+              {/* Slide dots */}
+              <div className="absolute bottom-6 right-6 flex gap-1.5">
+                {heroSlides.map((slide, index) => (
+                  <button
+                    key={slide.image}
+                    onClick={() => setActiveSlide(index)}
+                    aria-label={`Show slide ${index + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === activeSlide ? 'w-5 bg-[#EF9F27]' : 'w-1.5 bg-text-secondary/30'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -295,7 +348,7 @@ export default function Homepage() {
             <div className="h-[280px] md:h-[340px] rounded-xl overflow-hidden border border-border-brand relative order-2 lg:order-1">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1200&q=80')" }}
+                style={{ backgroundImage: "url('/images/mannar-project.jpg')" }}
               />
               <div className="absolute inset-0 dark:bg-[#0B0D12]/30 light:bg-white/10" />
             </div>
@@ -378,7 +431,7 @@ export default function Homepage() {
             <div className="h-[280px] md:h-[320px] rounded-xl overflow-hidden border border-border-brand relative">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=1200&q=80')" }}
+                style={{ backgroundImage: "url('/images/vff-team.jpg')" }}
               />
               <div className="absolute inset-0 dark:bg-[#0B0D12]/35 light:bg-white/10" />
               <div className="absolute bottom-6 left-6 text-[10px] font-mono text-text-primary dark:text-[#F9FAFB] bg-surface/80 py-1.5 px-3 rounded border border-border-brand flex items-center gap-1.5">
@@ -394,7 +447,10 @@ export default function Homepage() {
       <footer className="border-t border-border-brand bg-bg-brand pt-16 pb-8 text-xs text-text-secondary">
         <div className="max-w-[1280px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12">
           <div className="space-y-4">
-            <span className="text-base font-bold text-text-primary">VFF IMS</span>
+            <div className="flex items-center gap-2.5">
+              <Image src="/vff-logo.png" alt="Vets For Future" width={32} height={32} className="h-8 w-8 object-contain" />
+              <span className="text-base font-bold text-text-primary">VFF IMS</span>
+            </div>
             <p className="leading-relaxed">
               Digitizing animal welfare operations through integrated administrative systems, secure RBAC validation, and immutable auditing ledgers.
             </p>
