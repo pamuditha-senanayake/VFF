@@ -74,10 +74,20 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api
 npm run dev
 ```
 
-## 👥 Role Access Reference
-- **Admin**: Full access across all modules.
-- **Director**: Access to Operational/Financial dashboards (Finance, Programs, Inventory).
-- **Staff**: Limited access (Self-service HR, specialized inventory tasks).
+## 👥 Role Access Reference & Sitemap
+- **Admin**: Full access across all modules (System Admin).
+- **Director**: Access to Operational/Financial dashboards (Finance, Programs, Inventory, Audit Logs).
+- **HR Officer**: Access to Employees, Attendance, and Payroll.
+- **Finance Officer**: Access to Finance modules (Ledger, Payables, Receivables) and Inventory.
+- **Staff**: Limited access (Self-service Attendance, active programs).
+
+## 🔑 Demo Credentials
+The database comes pre-seeded with the following demo users (Password: `Password123!` for all):
+- `admin@vff.test` (Admin)
+- `director@vff.test` (Director)
+- `hr@vff.test` (HR Officer)
+- `finance@vff.test` (Finance Officer)
+- `staff@vff.test` (Staff)
 
 ## 📄 License
 Internal use only by VFF. Proprietary and Confidential.

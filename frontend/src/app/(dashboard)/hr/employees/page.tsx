@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Lock, Unlock, UserPlus, Filter, Download, UserCheck } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatLKR } from '@/lib/formatters';
 import ProtectedRoute from '@/components/layout/protected-route';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -191,7 +192,7 @@ export default function HRPage() {
                           <TableRow key={emp.id} className="border-border-brand hover:bg-[#14161C]/40 transition-colors">
                             <TableCell className="font-semibold text-text-primary text-xs">{emp.first_name} {emp.last_name}</TableCell>
                             <TableCell className="text-text-secondary text-xs font-mono">{emp.nic}</TableCell>
-                            <TableCell className="text-text-primary font-mono text-xs font-semibold">LKR {emp.base_salary.toLocaleString()}</TableCell>
+                            <TableCell className="text-text-primary font-mono text-xs font-semibold">{formatLKR(emp.base_salary)}</TableCell>
                             <TableCell>
                               <Badge className={
                                 emp.status === 'Active' 

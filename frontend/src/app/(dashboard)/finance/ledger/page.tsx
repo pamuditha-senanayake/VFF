@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
+import { formatLKR } from '@/lib/formatters';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 export default function LedgerPage() {
@@ -165,7 +166,7 @@ export default function LedgerPage() {
                             {t.transaction_type}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-medium">LKR {Number(t.amount).toLocaleString()}</td>
+                        <td className="px-4 py-3 font-medium">{formatLKR(Number(t.amount))}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                             t.status === 'Cash' ? 'bg-emerald-500/10 text-emerald-500' :
@@ -202,7 +203,7 @@ export default function LedgerPage() {
             </div>
             <div className="flex justify-between border-b border-border-brand pb-2">
               <span className="text-text-secondary">Amount</span>
-              <span className="font-medium text-text-primary">LKR {Number(amount).toLocaleString()}</span>
+              <span className="font-medium text-text-primary">{formatLKR(Number(amount))}</span>
             </div>
             <div className="flex justify-between border-b border-border-brand pb-2">
               <span className="text-text-secondary">Status</span>

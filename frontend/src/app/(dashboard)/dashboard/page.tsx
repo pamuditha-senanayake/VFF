@@ -7,7 +7,8 @@ import { useMyAttendance, useClockIn, useClockOut } from '@/hooks/useHR';
 import { useFinanceSummary, useFinanceAging, useTransactions } from '@/hooks/useFinance';
 import { useAuditLogs, useSystemStats } from '@/hooks/useAdmin';
 import { format } from 'date-fns';
-import { Clock, Lock, ArrowUpRight, ArrowDownRight, AlertTriangle, Users, Activity, ExternalLink, BookOpen } from 'lucide-react';
+import { Clock, Lock, ArrowUpRight, ArrowDownRight, AlertTriangle, Users, Activity, ExternalLink, BookOpen, DollarSign, Package, Calendar, ArrowRight, Wallet, ArrowDownUp, FileText, CheckCircle2, TrendingUp } from 'lucide-react';
+import { formatLKR, formatDate } from '@/lib/formatters';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 
@@ -141,7 +142,7 @@ function DirectorDashboard() {
           <CardContent>
             {isSummaryLoading ? <Skeleton className="h-10 w-32" /> : (
               <div className="text-4xl font-bold font-heading text-emerald-600 dark:text-emerald-400">
-                LKR {(summary?.cash_available || 0).toLocaleString()}
+                {formatLKR(summary?.cash_available || 0)}
               </div>
             )}
           </CardContent>
@@ -153,8 +154,8 @@ function DirectorDashboard() {
           </CardHeader>
           <CardContent>
             {isSummaryLoading ? <Skeleton className="h-10 w-32" /> : (
-              <div className="text-4xl font-bold font-heading text-text-primary">
-                LKR {(summary?.receivables || 0).toLocaleString()}
+              <div className="text-3xl font-bold text-text-primary mb-1">
+                {formatLKR(summary?.receivables || 0)}
               </div>
             )}
           </CardContent>
@@ -171,8 +172,8 @@ function DirectorDashboard() {
           </CardHeader>
           <CardContent>
             {isSummaryLoading ? <Skeleton className="h-10 w-32" /> : (
-              <div className="text-4xl font-bold font-heading text-rose-500">
-                LKR {(summary?.monthly_expenses || 0).toLocaleString()}
+              <div className="text-3xl font-bold text-text-primary mb-1">
+                {formatLKR(summary?.monthly_expenses || 0)}
               </div>
             )}
           </CardContent>
@@ -191,17 +192,17 @@ function DirectorDashboard() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="flex justify-between items-center pb-2 border-b border-border-brand">
+                <div className="flex justify-between items-center p-3 bg-surface border border-border/50 rounded-lg">
                   <span className="text-text-secondary">0-30 Days</span>
-                  <span className="font-medium text-emerald-500">LKR {(aging?.['0-30'] || 0).toLocaleString()}</span>
+                  <span className="font-medium text-emerald-500">{formatLKR(aging?.['0-30'] || 0)}</span>
                 </div>
-                <div className="flex justify-between items-center pb-2 border-b border-border-brand">
+                <div className="flex justify-between items-center p-3 bg-surface border border-border/50 rounded-lg">
                   <span className="text-text-secondary">31-60 Days</span>
-                  <span className="font-medium text-amber-500">LKR {(aging?.['31-60'] || 0).toLocaleString()}</span>
+                  <span className="font-medium text-amber-500">{formatLKR(aging?.['31-60'] || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary">61+ Days (Overdue)</span>
-                  <span className="font-medium text-rose-500">LKR {(aging?.['61+'] || 0).toLocaleString()}</span>
+                  <span className="font-medium text-rose-500">{formatLKR(aging?.['61+'] || 0)}</span>
                 </div>
               </div>
             )}
@@ -314,8 +315,8 @@ function FinanceOfficerDashboard() {
           </CardHeader>
           <CardContent>
             {isLoading ? <Skeleton className="h-8 w-24" /> : (
-              <div className="text-2xl font-bold font-heading text-emerald-500">
-                LKR {(summary?.cash_available || 0).toLocaleString()}
+              <div className="text-3xl font-bold text-text-primary mb-1">
+                {formatLKR(summary?.cash_available || 0)}
               </div>
             )}
           </CardContent>

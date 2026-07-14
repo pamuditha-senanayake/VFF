@@ -5,6 +5,8 @@ import { useTransactions, useSettleTransaction } from '@/hooks/useFinance';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Loader2, Plus, ArrowDownUp, Check, X, Search } from 'lucide-react';
+import { formatLKR } from '@/lib/formatters';
 import { differenceInDays, parseISO } from 'date-fns';
 
 export default function ReceivablesPage() {
@@ -60,7 +62,7 @@ export default function ReceivablesPage() {
                         <td className="px-4 py-4 text-text-secondary">
                           {t.programs?.program_name || 'General Income'}
                         </td>
-                        <td className="px-4 py-4 font-medium">LKR {Number(t.amount).toLocaleString()}</td>
+                        <td className="px-4 py-4 font-medium">{formatLKR(Number(t.amount))}</td>
                         <td className="px-4 py-4">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                             isOverdue ? 'bg-rose-500/10 text-rose-500' : 

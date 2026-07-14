@@ -21,7 +21,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VFF IMS | Integrated Management System",
+  title: {
+    template: '%s | VFF IMS',
+    default: 'VFF IMS | Integrated Management System',
+  },
   description: "Enterprise management system for VFF",
 };
 

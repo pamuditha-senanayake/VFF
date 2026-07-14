@@ -83,4 +83,10 @@ export interface AuditLog {
   old_payload: any;
   new_payload: any;
   timestamp: string;
+  users?: {
+    email: string;
+    roles?: {
+      role_name: string;
+    };
+  };
 }

@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Package, ArrowUpRight, ArrowDownLeft, Filter, Plus } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatLKR } from '@/lib/formatters';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { useThemeStore } from '@/store/useThemeStore';
@@ -277,8 +278,8 @@ export default function InventoryPage() {
                             {item.current_stock}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-text-primary font-semibold">LKR {item.unit_cost}</TableCell>
-                        <TableCell className="text-text-secondary font-mono text-xs">LKR {(item.current_stock * item.unit_cost).toLocaleString()}</TableCell>
+                        <TableCell className="font-mono text-xs text-text-primary font-semibold">{formatLKR(item.unit_cost)}</TableCell>
+                        <TableCell className="text-text-secondary font-mono text-xs">{formatLKR(item.current_stock * item.unit_cost)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
