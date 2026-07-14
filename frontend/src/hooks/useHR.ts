@@ -9,10 +9,47 @@ export function useEmployees() {
   });
 }
 
-export function useAttendance(date: string) {
+export function useAttendance(date?: string, month?: number, year?: number) {
   return useQuery({
-    queryKey: ['attendance', date],
-    queryFn: () => HRService.getAttendance(date),
+    queryKey: ['attendance', { date, month, year }],
+    queryFn: () => HRService.getAttendance(date, month, year),
+  });
+}
+
+export function useMyAttendance(month?: number, year?: number) {
+  return useQuery({
+    queryKey: ['my-attendance', { month, year }],
+    queryFn: () => HRService.getMyAttendance(month, year),
+  });
+}
+
+export function useClockIn() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: HRService.clockIn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-attendance'] });
+      toast.success('Successfully clocked in');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to clock in');
+    }
+  });
+}
+
+export function useClockOut() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: HRService.clockOut,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-attendance'] });
+      toast.success('Successfully clocked out');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to clock out');
+    }
   });
 }
 

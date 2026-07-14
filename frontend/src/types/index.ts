@@ -1,4 +1,5 @@
-export type UserRole = 'Admin' | 'Director';
+import { UserRole } from '../lib/permissions';
+export type { UserRole };
 
 export interface User {
   id: string;
@@ -26,6 +27,10 @@ export interface AttendanceRecord {
   clock_out: string | null;
   worked_hours: number | null;
   is_locked: boolean;
+  employee_profile?: {
+    first_name: string;
+    last_name: string;
+  };
 }
 
 export interface Transaction {

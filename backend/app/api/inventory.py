@@ -4,25 +4,24 @@ from app.schemas.inventory import InventoryItem, InventoryItemCreate, InventoryT
 from typing import List, Optional
 from datetime import date
 from supabase import Client
-from app.core.security import check_user_role
+from app.core.security import require_permission
 
 router = APIRouter()
 
-
 @router.get("/items", response_model=List[InventoryItem])
-async def get_items(supabase: Client = Depends(get_supabase)):
+async def get_items(user = Depends(require_permission('inventory:read')), supabase: Client = Depends(get_supabase)):
     response = supabase.table("inventory_items").select("*").execute()
     return response.data
 
 @router.post("/items", response_model=InventoryItem)
-async def create_item(item: InventoryItemCreate, supabase: Client = Depends(get_supabase)):
+async def create_item(item: InventoryItemCreate, user = Depends(require_permission('inventory:issue')), supabase: Client = Depends(get_supabase)):
     response = supabase.table("inventory_items").insert(item.model_dump()).execute()
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create item")
     return response.data[0]
 
 @router.get("/transactions", response_model=List[InventoryTransaction])
-async def get_transactions(item_id: Optional[int] = None, supabase: Client = Depends(get_supabase)):
+async def get_transactions(item_id: Optional[int] = None, user = Depends(require_permission('inventory:read')), supabase: Client = Depends(get_supabase)):
     query = supabase.table("inventory_transactions").select("*, inventory_items(item_name), programs(program_name)")
     if item_id:
         query = query.eq("item_id", item_id)
@@ -30,7 +29,7 @@ async def get_transactions(item_id: Optional[int] = None, supabase: Client = Dep
     return response.data
 
 @router.post("/transactions", response_model=InventoryTransaction)
-async def create_transaction(transaction: InventoryTransactionCreate, supabase: Client = Depends(get_supabase)):
+async def create_transaction(transaction: InventoryTransactionCreate, user = Depends(require_permission('inventory:issue')), supabase: Client = Depends(get_supabase)):
     # 1. Start transaction (Supabase doesn't support multi-table atomic transactions easily via client, so we do it step-wise)
     # In a real production app, we should use a Postgres function (RPC) for atomicity.
     

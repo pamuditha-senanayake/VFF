@@ -32,12 +32,22 @@ voidTransaction: async (id: number) => {
   return response.data;
 },
 
+settleTransaction: async (id: number) => {
+  const response = await api.patch<Transaction>(`/finance/transactions/${id}/settle`);
+  return response.data;
+},
+
   getSummary: async () => {
     const response = await api.get<{
       cash_available: number;
       receivables: number;
       monthly_expenses: number;
     }>('/finance/summary');
+    return response.data;
+  },
+
+  getAging: async () => {
+    const response = await api.get<Record<string, number>>('/finance/aging');
     return response.data;
   }
 };

@@ -115,7 +115,7 @@ export default function HRPage() {
   };
 
   return (
-    <ProtectedRoute allowedRoles={['Admin']}>
+    <ProtectedRoute requiredPermission="hr:manage">
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

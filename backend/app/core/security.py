@@ -2,6 +2,7 @@ from fastapi import Security, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.supabase import get_supabase
 from supabase import Client
+from app.core.permissions import has_permission
 
 security = HTTPBearer()
 
@@ -33,4 +34,12 @@ def check_user_role(allowed_roles: list[str]):
             raise HTTPException(status_code=403, detail="Insufficient permissions")
         return current_user
     return role_checker
+
+def require_permission(permission: str):
+    async def permission_checker(current_user: dict = Depends(get_current_user)):
+        role_name = (current_user.get("roles", {}).get("role_name") or "")
+        if not has_permission(role_name, permission):
+            raise HTTPException(status_code=403, detail=f"Insufficient permissions. Requires {permission}")
+        return current_user
+    return permission_checker
 

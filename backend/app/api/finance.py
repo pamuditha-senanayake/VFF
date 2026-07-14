@@ -6,7 +6,7 @@ from supabase import Client
 
 # Internal App Imports
 from app.core.supabase import get_supabase
-from app.core.security import check_user_role
+from app.core.security import require_permission
 from app.schemas.finance import (
     FinancialTransaction,
     FinancialTransactionCreate,
@@ -24,7 +24,7 @@ router = APIRouter()
 async def get_transactions(
     start_date: Optional[date] = None,
     end_date: Optional[date] = None,
-    user = Depends(check_user_role(["admin", "director", "finance"])), # SECURED
+    user = Depends(require_permission('finance:read')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     query = supabase.table("financial_transactions").select("*, programs(program_name)")
@@ -41,7 +41,7 @@ async def get_transactions(
 @router.post("/transactions", response_model=FinancialTransaction)
 async def create_transaction(
     transaction: FinancialTransactionCreate,
-    user = Depends(check_user_role(["admin", "finance"])),
+    user = Depends(require_permission('finance:write')),
     supabase: Client = Depends(get_supabase)
 ):
     if transaction.amount <= 0:
@@ -62,7 +62,7 @@ async def create_transaction(
 @router.get("/transactions/type/{transaction_type}")
 async def get_transactions_by_type(
     transaction_type: str,
-    user = Depends(check_user_role(["admin", "director", "finance"])), # SECURED
+    user = Depends(require_permission('finance:read')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     transaction_type = transaction_type.capitalize()
@@ -78,7 +78,7 @@ async def get_transactions_by_type(
 async def update_transaction(
     transaction_id: int,
     transaction: FinancialTransactionCreate,
-    user = Depends(check_user_role(["admin", "finance"])),
+    user = Depends(require_permission('finance:write')),
     supabase: Client = Depends(get_supabase)
 ):
     if transaction.amount <= 0:
@@ -102,7 +102,7 @@ async def update_transaction(
 @router.patch("/transactions/{transaction_id}/void", response_model=FinancialTransaction)
 async def void_transaction(
     transaction_id: int,
-    user = Depends(check_user_role(["admin", "finance"])),
+    user = Depends(require_permission('finance:write')),
     supabase: Client = Depends(get_supabase)
 ):
     # Check it exists and isn't already voided
@@ -125,6 +125,31 @@ async def void_transaction(
 
     return response.data[0]
 
+@router.patch("/transactions/{transaction_id}/settle", response_model=FinancialTransaction)
+async def settle_transaction(
+    transaction_id: int,
+    user = Depends(require_permission('finance:write')),
+    supabase: Client = Depends(get_supabase)
+):
+    existing = supabase.table("financial_transactions") \
+        .select("*") \
+        .eq("id", transaction_id) \
+        .single() \
+        .execute()
+
+    if not existing.data:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    if existing.data.get("status") == "Cash":
+        raise HTTPException(status_code=400, detail="Transaction is already settled")
+
+    response = supabase.table("financial_transactions") \
+        .update({"status": "Cash"}) \
+        .eq("id", transaction_id) \
+        .execute()
+
+    return response.data[0]
+
 
 # ==========================================
 # 2. PROGRAMS
@@ -132,7 +157,7 @@ async def void_transaction(
 
 @router.get("/programs", response_model=List[Program])
 async def get_programs(
-    user = Depends(check_user_role(["admin", "director", "finance", "ops"])), # SECURED
+    user = Depends(require_permission('programs:read')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     response = supabase.table("programs").select("*").execute()
@@ -142,7 +167,7 @@ async def get_programs(
 @router.post("/programs", response_model=Program)
 async def create_program(
     program: ProgramCreate,
-    user = Depends(check_user_role(["admin", "director"])), # SECURED
+    user = Depends(require_permission('programs:manage')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     response = supabase.table("programs").insert(program.model_dump()).execute()
@@ -159,22 +184,75 @@ async def create_program(
 
 @router.get("/summary")
 async def get_financial_summary(
-    user = Depends(check_user_role(["admin", "director", "finance"])),
+    user = Depends(require_permission('finance:read')),
     supabase: Client = Depends(get_supabase)
 ):
-    response = supabase.rpc("get_finance_summary").execute()
+    # Fetch all transactions to compute summary
+    response = supabase.table("financial_transactions").select("amount, transaction_type, status").execute()
+    transactions = response.data or []
     
-    if not response.data:
-        raise HTTPException(status_code=500, detail="Failed to fetch financial summary")
+    cash_available = 0
+    receivables = 0
+    monthly_expenses = 0 # Approximated from all expenses for this simple summary
     
-    return response.data
+    for t in transactions:
+        amt = float(t["amount"])
+        if t["transaction_type"] == "Income":
+            if t["status"] == "Cash":
+                cash_available += amt
+            elif t["status"] == "Receivable":
+                receivables += amt
+        elif t["transaction_type"] == "Expense":
+            monthly_expenses += amt
+            if t["status"] == "Cash":
+                cash_available -= amt
+                
+    return {
+        "cash_available": cash_available,
+        "receivables": receivables,
+        "monthly_expenses": monthly_expenses
+    }
+
+@router.get("/aging")
+async def get_aging_summary(
+    user = Depends(require_permission('finance:read')),
+    supabase: Client = Depends(get_supabase)
+):
+    response = supabase.table("financial_transactions") \
+        .select("*") \
+        .eq("status", "Receivable") \
+        .execute()
+    
+    transactions = response.data or []
+    from datetime import datetime
+    today = datetime.now().date()
+    
+    aging = {
+        "0-30": 0,
+        "31-60": 0,
+        "61+": 0
+    }
+    
+    for t in transactions:
+        t_date = datetime.strptime(t["transaction_date"], "%Y-%m-%d").date()
+        days = (today - t_date).days
+        amt = float(t["amount"])
+        
+        if days <= 30:
+            aging["0-30"] += amt
+        elif days <= 60:
+            aging["31-60"] += amt
+        else:
+            aging["61+"] += amt
+            
+    return aging
 
 
 @router.get("/summary/monthly")
 async def monthly_summary(
     month: int,
     year: int,
-    user = Depends(check_user_role(["admin", "director", "finance"])), # SECURED
+    user = Depends(require_permission('finance:read')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     # Big-O Optimization: Database-level filtering
@@ -210,7 +288,7 @@ async def monthly_summary(
 async def calculate_monthly_payroll(
     year: int,
     month: int,
-    user = Depends(check_user_role(["admin", "director", "finance"])), # SECURED
+    user = Depends(require_permission('payroll:generate')), # SECURED
     supabase: Client = Depends(get_supabase)
 ):
     # 1. Date boundaries

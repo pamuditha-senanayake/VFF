@@ -21,6 +21,29 @@ const getPageTitle = (pathname: string) => {
   return "Overview";
 };
 
+function Breadcrumbs({ pathname }: { pathname: string }) {
+  const paths = pathname.split('/').filter(Boolean);
+  
+  if (paths.length <= 1) return null;
+
+  return (
+    <div className="flex items-center gap-2 text-sm text-text-secondary mb-6">
+      {paths.map((p, idx) => {
+        const isLast = idx === paths.length - 1;
+        const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+        return (
+          <div key={p} className="flex items-center gap-2">
+            <span className={isLast ? "text-text-primary font-semibold" : ""}>
+              {capitalized}
+            </span>
+            {!isLast && <span>/</span>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function DashboardLayout({
   children,
 }: {
@@ -79,6 +102,7 @@ export default function DashboardLayout({
           <Topbar title={title} onMenuToggle={() => setIsMobileOpen(!isMobileOpen)} />
           <main className="flex-1 overflow-y-auto">
             <div className="p-4 md:p-8 max-w-[1400px] mx-auto space-y-8">
+              <Breadcrumbs pathname={pathname} />
               {children}
             </div>
           </main>

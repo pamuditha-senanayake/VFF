@@ -106,7 +106,7 @@ export default function AdminPage() {
   }, [users, searchTerm, roleFilter]);
 
   return (
-    <ProtectedRoute allowedRoles={['Admin']}>
+    <ProtectedRoute requiredPermission="admin:users">
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

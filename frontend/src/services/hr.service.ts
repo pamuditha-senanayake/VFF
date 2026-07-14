@@ -17,9 +17,30 @@ export const HRService = {
     return response.data;
   },
 
-  getAttendance: async (date?: string) => {
-    const params = date ? { target_date: date } : {};
+  getAttendance: async (date?: string, month?: number, year?: number) => {
+    const params: any = {};
+    if (date) params.target_date = date;
+    if (month && year) {
+      params.month = month;
+      params.year = year;
+    }
     const response = await api.get<AttendanceRecord[]>('/hr/attendance', { params });
+    return response.data;
+  },
+
+  getMyAttendance: async (month?: number, year?: number) => {
+    const params = (month && year) ? { month, year } : {};
+    const response = await api.get<AttendanceRecord[]>('/hr/attendance/me', { params });
+    return response.data;
+  },
+
+  clockIn: async () => {
+    const response = await api.post<AttendanceRecord>('/hr/attendance/clock-in');
+    return response.data;
+  },
+
+  clockOut: async () => {
+    const response = await api.post<AttendanceRecord>('/hr/attendance/clock-out');
     return response.data;
   },
 
@@ -29,7 +50,7 @@ export const HRService = {
   },
 
   lockAttendance: async (date: string) => {
-    const response = await api.post(`/hr/attendance/lock`, null, { params: { target_date: date } });
+    const response = await api.post(`/hr/attendance/lock-day`, null, { params: { target_date: date } });
     return response.data;
   },
 

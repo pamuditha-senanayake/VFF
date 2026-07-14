@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { useThemeStore } from '@/store/useThemeStore';
+import ProtectedRoute from '@/components/layout/protected-route';
 
 const MOCK_PROGRAMS = [
   { id: 101, program_name: 'Regional Vaccination Alpha', status: 'Active', total_animals_treated: 1240 },
@@ -161,7 +162,8 @@ export default function ProgramsPage() {
   };
 
   return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
+    <ProtectedRoute requiredPermission="programs:read">
+      <div className="space-y-8 pb-12 animate-in fade-in duration-700">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -309,5 +311,6 @@ export default function ProgramsPage() {
         </div>
       )}
     </div>
+    </ProtectedRoute>
   );
 }
