@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Mail, Lock, Eye, EyeOff, UserPlus, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { getErrorMessage } from '@/lib/utils';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -42,7 +43,7 @@ export default function RegisterPage() {
       toast.success('Registration successful. Welcome to VFF.');
       router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Registration failed. Please check details.');
+      toast.error(getErrorMessage(err) || 'Registration failed. Please check details.');
     } finally {
       setLoading(false);
     }

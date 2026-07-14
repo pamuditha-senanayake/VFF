@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { formatLKR } from '@/lib/formatters';
+import { hasPermission } from '@/lib/permissions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 export default function LedgerPage() {
-  const { hasPermission } = useAuthStore();
-  const canWrite = hasPermission('finance:write');
+  const { user } = useAuthStore();
+  const canWrite = hasPermission(user?.role as string, 'finance:write');
   
   const { data: transactions, isLoading } = useTransactions();
   const { data: programs, isLoading: isProgramsLoading } = usePrograms();

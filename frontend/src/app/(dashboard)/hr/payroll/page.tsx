@@ -62,7 +62,7 @@ export default function HRPayrollPage() {
           <div className="flex gap-4">
             <div className="flex-1 space-y-2">
               <label className="text-sm font-medium text-text-secondary">Month</label>
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <Select value={selectedMonth} onValueChange={(val) => val && setSelectedMonth(val)}>
                 <SelectTrigger className="bg-bg-brand border-border-brand">
                   <SelectValue placeholder="Select month" />
                 </SelectTrigger>
@@ -75,7 +75,7 @@ export default function HRPayrollPage() {
             </div>
             <div className="flex-1 space-y-2">
               <label className="text-sm font-medium text-text-secondary">Year</label>
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <Select value={selectedYear} onValueChange={(val) => val && setSelectedYear(val)}>
                 <SelectTrigger className="bg-bg-brand border-border-brand">
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>

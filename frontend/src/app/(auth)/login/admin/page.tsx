@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { LogIn, Mail, Lock, Eye, EyeOff, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
+import { getErrorMessage } from '@/lib/utils';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -36,7 +37,7 @@ export default function AdminLoginPage() {
       toast.success('Admin access granted. Welcome back.');
       router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Authentication failed. Please check your credentials.');
+      toast.error(getErrorMessage(err) || 'Authentication failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }

@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, Plus, ArrowDownUp, Check, X, Search } from 'lucide-react';
 import { formatLKR } from '@/lib/formatters';
+import { hasPermission } from '@/lib/permissions';
 import { differenceInDays, parseISO } from 'date-fns';
 
 export default function ReceivablesPage() {
-  const { hasPermission } = useAuthStore();
-  const canWrite = hasPermission('finance:write');
+  const { user } = useAuthStore();
+  const canWrite = hasPermission(user?.role as string, 'finance:write');
   
   const { data: transactions, isLoading } = useTransactions();
   const { mutate: settleTransaction, isPending } = useSettleTransaction();

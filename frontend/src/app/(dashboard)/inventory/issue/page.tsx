@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { hasPermission } from '@/lib/permissions';
 import { useInventoryItems, useCreateInventoryTransaction } from '@/hooks/useInventory';
 import { usePrograms } from '@/hooks/useFinance';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -9,8 +10,8 @@ import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 
 export default function IssueInventoryPage() {
-  const { hasPermission } = useAuthStore();
-  const canWrite = hasPermission('inventory:write');
+  const { user } = useAuthStore();
+  const canWrite = hasPermission(user?.role as string, 'inventory:issue');
   
   const { data: items } = useInventoryItems();
   const { data: programs } = usePrograms();

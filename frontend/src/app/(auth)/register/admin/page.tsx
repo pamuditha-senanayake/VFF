@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Mail, Lock, Eye, EyeOff, ShieldCheck, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { getErrorMessage } from '@/lib/utils';
 
 export default function AdminRegisterPage() {
   const [email, setEmail] = useState('');
@@ -42,7 +43,7 @@ export default function AdminRegisterPage() {
       toast.success('Administrator registry generated successfully.');
       router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Admin signup failed.');
+      toast.error(getErrorMessage(err) || 'Admin signup failed.');
     } finally {
       setLoading(false);
     }

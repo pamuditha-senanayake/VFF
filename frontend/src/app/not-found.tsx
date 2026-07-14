@@ -21,11 +21,11 @@ export default function NotFound() {
           </p>
         </div>
 
-        <Button asChild className="w-full bg-brand-primary hover:bg-brand-secondary text-white font-semibold">
-          <Link href="/dashboard">
+        <Link href="/dashboard" className="block w-full">
+          <Button className="w-full bg-brand-primary hover:bg-brand-secondary text-white font-semibold">
             Return to Dashboard
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
     </div>
   );

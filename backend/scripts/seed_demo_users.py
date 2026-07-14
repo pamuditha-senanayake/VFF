@@ -22,11 +22,11 @@ def seed_users():
     
     # We define the users to seed
     users = [
-        {"email": "admin@vff.test", "role_id": 1, "first": "Admin", "last": "User"},
-        {"email": "director@vff.test", "role_id": 2, "first": "Director", "last": "User"},
-        {"email": "hr@vff.test", "role_id": 3, "first": "HR", "last": "User"},
-        {"email": "finance@vff.test", "role_id": 4, "first": "Finance", "last": "User"},
-        {"email": "staff@vff.test", "role_id": 5, "first": "Staff", "last": "User"}
+        {"email": "admin@vff.org", "role_id": 1, "first": "Admin", "last": "User"},
+        {"email": "director@vff.org", "role_id": 2, "first": "Director", "last": "User"},
+        {"email": "hr@vff.org", "role_id": 3, "first": "HR", "last": "User"},
+        {"email": "finance@vff.org", "role_id": 4, "first": "Finance", "last": "User"},
+        {"email": "staff@vff.org", "role_id": 5, "first": "Staff", "last": "User"}
     ]
     
     # In a real environment with the service key, we could use supabase.auth.admin.create_user.
@@ -68,7 +68,7 @@ def seed_users():
                         "user_id": user_id,
                         "first_name": u["first"],
                         "last_name": u["last"],
-                        "nic": f"DEMO{u['role_id']}V",
+                        "nic": f"ORG{u['role_id']}V",
                         "base_salary": 50000 + (10000 * (6 - u["role_id"])),
                         "status": "Active"
                     }).execute()
